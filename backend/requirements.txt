@@ -2,3 +2,4 @@ flask
 flask_sqlalchemy
 jsonpickle
 Flask-Migrate
+flask-cors

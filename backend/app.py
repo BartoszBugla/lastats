@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS, cross_origin
 
 import logging
 
@@ -18,6 +19,7 @@ def create_app():
     # extensions
     db.init_app(app)
     # migrate.init_app(app, db)
+    CORS(app)
 
     # set logger
     app.logger.addHandler(logging.StreamHandler())

@@ -21,7 +21,4 @@ def get_all():
     for test in tests:
         results.append(test)
 
-    if random() > 0.5:
-        raise abort(403)
-
     return results
