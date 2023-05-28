@@ -1,5 +1,6 @@
 flask
 flask_sqlalchemy
+sqlalchemy
 jsonpickle
 Flask-Migrate
 flask-cors

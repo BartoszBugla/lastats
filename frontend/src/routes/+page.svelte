@@ -1,15 +1,11 @@
 <script lang="ts">
-	import type { Test } from '$lib/models';
-	import { onMount } from 'svelte';
+	import { api } from '$lib/api';
+	import type { Test } from '$lib/api/models';
+	import { createQuery } from '@tanstack/svelte-query';
 
-	const endpoint = 'http://localhost:8000/test/';
-
-	let data: Test[] = [];
-
-	onMount(async function () {
-		const response = await fetch(endpoint);
-		data = await response.json();
-		console.log(data);
+	$: tests = createQuery<Test[]>({
+		queryKey: ['get-all-tests'],
+		queryFn: async () => await api.test.getAll()
 	});
 </script>
 
@@ -38,13 +34,22 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each data as item}
+					{#if $tests.isLoading}
 						<tr>
-							<th />
-							<td>{item.id}</td>
-							<td>{item.name}</td>
+							<td colspan="3">Loading...</td>
+							dsdsds
 						</tr>
-					{/each}
+					{/if}
+
+					{#if $tests.isSuccess}
+						{#each $tests.data as item}
+							<tr>
+								<th />
+								<td>{item.id}</td>
+								<td>{item.name}</td>
+							</tr>
+						{/each}
+					{/if}
 				</tbody>
 			</table>
 		</div>

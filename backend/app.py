@@ -26,10 +26,10 @@ def create_app():
     app.logger.setLevel(logging.ERROR)
 
     # register blueprints
-    from app.controllers.test_controller import test_bp
+    # from app.controllers.test_controller import test_bp
     from app.controllers.errors import errors_bp
 
-    app.register_blueprint(test_bp, url_prefix="/test")
+    # app.register_blueprint(test_bp, url_prefix="/test")
     app.register_blueprint(errors_bp, url_prefix="/")
 
     return app
@@ -43,4 +43,8 @@ if __name__ == "__main__":
         db.create_all()
         seed()
 
+    from sqlalchemy.inspection import inspect
+    from app.models.test import Test
+
+    columns = [column.name for column in inspect(Test).c]
     app.run(port=app.config["PORT"], debug=True)
