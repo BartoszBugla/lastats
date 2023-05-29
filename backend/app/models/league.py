@@ -4,10 +4,16 @@ from .base import BaseModel
 
 
 class League(BaseModel):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), nullable=False)
+    __tablename__ = "leagues"
+    __tablename__ = "leagues"
 
-    Teams = db.relationship("Team", backref="league", lazy=True)
+    name: str
+    name = db.Column(db.String(100), nullable=False, unique=True)
+
+    Teams = db.relationship("Team", backref="leagues", lazy=True)
+
+    def __init__(self, name):
+        self.name = name
 
     def __repr__(self):
         return f"<League {self.name}>"

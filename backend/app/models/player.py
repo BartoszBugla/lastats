@@ -13,10 +13,16 @@ class PlayerPosition(enum.Enum):
 
 
 class Player(BaseModel):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    __tablename__ = "players"
+
     name = db.Column(db.String(100), nullable=False)
     position = db.Column(db.Enum(PlayerPosition))
-    team_id = db.Column(db.Integer, db.ForeignKey("team.id"))
+    team_id = db.Column(db.Integer, db.ForeignKey("teams.id"))
+
+    def __init__(self, name, position=None, team_id=None):
+        self.name = name
+        self.position = position
+        self.team_id = team_id
 
     def __repr__(self):
         return f"<Player {self.name}>"

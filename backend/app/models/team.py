@@ -7,11 +7,17 @@ from .base import BaseModel
 
 @dataclass
 class Team(BaseModel):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(100), nullable=False)
-    league_points = db.Column(db.Integer, nullable=False)
-    league_id = db.Column(db.Integer, db.ForeignKey("league.id"), nullable=True)
-    players = db.relationship("Player", backref="team", lazy=True)
+    __tablename__ = "teams"
+
+    name = db.Column(db.String(100), nullable=False, unique=True)
+    league_points = db.Column(db.Integer, default=0)
+    league_id = db.Column(db.Integer, db.ForeignKey("leagues.id"))
+    players = db.relationship("Player", backref="teams", lazy=True)
+
+    def __init__(self, name, league_points=0, league_id=None):
+        self.name = name
+        self.league_points = league_points
+        self.league_id = league_id
 
     def __repr__(self):
         return f"<Team {self.name}>"

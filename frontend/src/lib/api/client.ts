@@ -8,5 +8,9 @@ const apiClient = axios.create({
 export const api = {
 	test: {
 		getAll: () => apiClient.get('/test/').then(({ data }) => data)
+	},
+	league: {
+		getAll: () => apiClient.get('/league/').then(({ data }) => data),
+		create: (name: string) => apiClient.post('/league/', { name }).then(({ data }) => data)
 	}
 };

@@ -1,4 +1,3 @@
-# from sqlalchemy.orm import declarative_base
 import json
 
 from app.extensions import db
@@ -18,5 +17,5 @@ class Serializable:
 class BaseModel(Serializable, db.Model):
     __abstract__ = True
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    createdAt = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updatedAt = db.Column(db.DateTime, onupdate=datetime.utcnow)
