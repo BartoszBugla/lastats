@@ -1,16 +1,7 @@
 <script lang="ts">
-	import type { Test } from '$lib/models';
-	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
 
-	const endpoint = 'http://localhost:8000/test/';
-
-	let data: Test[] = [];
-
-	onMount(async function () {
-		const response = await fetch(endpoint);
-		data = await response.json();
-		console.log(data);
-	});
+	export let data: PageData;
 </script>
 
 <section class="flex flex-col">
@@ -38,11 +29,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each data as item}
+					{#each data.leagues as league}
 						<tr>
 							<th />
-							<td>{item.id}</td>
-							<td>{item.name}</td>
+							<td>{league.id}</td>
+							<td>{league.name}</td>
 						</tr>
 					{/each}
 				</tbody>
