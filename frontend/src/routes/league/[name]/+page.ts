@@ -8,7 +8,5 @@ interface MainPageData {
 export const load: PageLoad<MainPageData> = async () => {
 	const leagues = await api.leagues.getAll();
 
-	console.log(leagues);
-
 	return { leagues };
 };

@@ -5,7 +5,6 @@ from app.extensions import db
 from .base import BaseModel
 
 
-@dataclass
 class Team(BaseModel):
     __tablename__ = "teams"
 

@@ -5,9 +5,7 @@ from .base import BaseModel
 
 class League(BaseModel):
     __tablename__ = "leagues"
-    __tablename__ = "leagues"
 
-    name: str
     name = db.Column(db.String(100), nullable=False, unique=True)
 
     Teams = db.relationship("Team", backref="leagues", lazy=True)

@@ -1,2 +1,2 @@
-export * from './models';
+export * from './models/leagues';
 export * from './client';

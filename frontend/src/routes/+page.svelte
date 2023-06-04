@@ -1,12 +1,7 @@
 <script lang="ts">
-	import { api } from '$lib/api';
-	import type { Test } from '$lib/api/models';
-	import { createQuery } from '@tanstack/svelte-query';
+	import type { PageData } from './$types';
 
-	$: tests = createQuery<Test[]>({
-		queryKey: ['get-all-tests'],
-		queryFn: async () => await api.test.getAll()
-	});
+	export let data: PageData;
 </script>
 
 <section class="flex flex-col">
@@ -34,22 +29,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#if $tests.isLoading}
+					{#each data.leagues as league}
 						<tr>
-							<td colspan="3">Loading...</td>
-							dsdsds
+							<th />
+							<td>{league.id}</td>
+							<td>{league.name}</td>
 						</tr>
-					{/if}
-
-					{#if $tests.isSuccess}
-						{#each $tests.data as item}
-							<tr>
-								<th />
-								<td>{item.id}</td>
-								<td>{item.name}</td>
-							</tr>
-						{/each}
-					{/if}
+					{/each}
 				</tbody>
 			</table>
 		</div>
