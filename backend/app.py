@@ -3,7 +3,7 @@ import logging
 from flask import Flask
 from flask_cors import CORS, cross_origin
 
-from app.extensions import db
+from api.extensions import db
 
 from config import DevelopmentConfig
 from seed import seed
@@ -26,8 +26,8 @@ def create_app():
     app.logger.setLevel(logging.ERROR)
 
     # register blueprints
-    from app.controllers.errors import errors_bp
-    from app.controllers.leagues_controller import league_bp
+    from api.controllers.errors import errors_bp
+    from api.controllers.leagues_controller import league_bp
 
     app.register_blueprint(errors_bp, url_prefix="/")
     app.register_blueprint(league_bp, url_prefix="/leagues")

@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 
-from app.extensions import db
-from app.models.league import League
-from app.utils import serialize_all
+from api.extensions import db
+from api.models.league import League
+from api.utils import serialize_all
 
 league_bp = Blueprint("leagues", __name__)
 

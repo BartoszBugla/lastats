@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
 
-from app.services.test_service import create_test, get_all
+from api.services.test_service import create_test, get_all
 
 
 test_bp = Blueprint("test", __name__)

@@ -1,6 +1,6 @@
 import json
 
-from app.extensions import db
+from api.extensions import db
 from datetime import datetime
 
 
