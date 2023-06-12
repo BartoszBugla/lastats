@@ -5,16 +5,15 @@ from flask_cors import CORS, cross_origin
 
 from api.extensions import db
 
-from config import DevelopmentConfig
+from config import get_env_config
 from seed import seed
 
 
 def create_app():
-    """Create Flask app."""
     app = Flask(__name__)
 
     # load config
-    app.config.from_object(DevelopmentConfig())
+    app.config.from_object(get_env_config())
 
     # extensions
     db.init_app(app)
@@ -34,7 +33,6 @@ def create_app():
 
     return app
 
-
 if __name__ == "__main__":
     app = create_app()
 
@@ -43,4 +41,7 @@ if __name__ == "__main__":
         db.create_all()
         seed()
 
-    app.run(port=app.config["PORT"], debug=True)
+    app.run(
+        port=app.config["PORT"], 
+        debug=app.config["DEBUG"],
+    )
