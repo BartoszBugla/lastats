@@ -14,6 +14,7 @@ def create_app():
 
     # load config
     app.config.from_object(get_env_config())
+    print(f'app config: {app.config}')
 
     # extensions
     db.init_app(app)
@@ -35,6 +36,7 @@ def create_app():
 
     return app
 
+
 if __name__ == "__main__":
     app = create_app()
 
@@ -44,6 +46,7 @@ if __name__ == "__main__":
         seed()
 
     app.run(
-        port=app.config["PORT"], 
+        host=app.config["HOST"],
+        port=app.config["PORT"],
         debug=app.config["DEBUG"],
     )
