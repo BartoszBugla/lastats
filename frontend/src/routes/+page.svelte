@@ -1,7 +1,4 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
-	export let data: PageData;
 </script>
 
 <section class="flex flex-col">
@@ -29,13 +26,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each data.leagues as league}
+					<!-- {#each data.leagues as league}
 						<tr>
 							<th />
 							<td>{league.id}</td>
 							<td>{league.name}</td>
 						</tr>
-					{/each}
+					{/each} -->
 				</tbody>
 			</table>
 		</div>
