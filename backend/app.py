@@ -14,7 +14,7 @@ def create_app():
 
     # load config
     app.config.from_object(get_env_config())
-    print(f'app config: {app.config}')
+    print(f"app config: {app.config}")
 
     # extensions
     db.init_app(app)

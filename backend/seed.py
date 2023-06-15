@@ -31,10 +31,12 @@ def seed_players():
 
 
 def seed_teams():
-    team = Team("Testowy zesp")
-    team = Team("Testowy zesp 2")
+    league = League("Testowa liga")
+    team = Team("Testowy zesp 12", league_id=1)
+    team2 = Team("Testowy zesp 2", league_id=1)
 
     db.session.add(team)
+    db.session.add(team2)
 
 
 def seed_matches():
