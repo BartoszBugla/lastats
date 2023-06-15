@@ -7,6 +7,9 @@ const dev = process.argv.includes('dev');
 const config = {
   kit: {
     adapter: adapter(),
+    prerender:{
+      entries: ['/leagues/*'],
+    },
     paths: {
         base: dev ? '/base' : process.env.BASE_PATH,
     }
