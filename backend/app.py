@@ -4,6 +4,7 @@ from flask import Flask
 from flask_cors import CORS, cross_origin
 
 from api.extensions import db
+from api.api_extension import api
 
 from config import get_env_config
 from seed import seed
@@ -18,6 +19,7 @@ def create_app():
 
     # extensions
     db.init_app(app)
+    api.init_app(app)
     # migrate.init_app(app, db)
     CORS(app)
 
@@ -30,7 +32,6 @@ def create_app():
     from api.controllers.leagues_controller import league_bp
     from api.controllers.teams_controller import teams_bp
 
-    app.register_blueprint(errors_bp, url_prefix="/")
     app.register_blueprint(league_bp, url_prefix="/leagues")
     app.register_blueprint(teams_bp, url_prefix="/teams")
 
