@@ -31,6 +31,7 @@ def create_app():
     from api.controllers.errors import errors_bp
     from api.controllers.leagues_controller import league_bp
 
+    # TODO: migrate to use flask_restx (just like /teams)
     app.register_blueprint(league_bp, url_prefix="/leagues")
 
     return app

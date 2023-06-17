@@ -2,19 +2,19 @@ import os
 
 
 class BaseConfig(object):
-    HOST = '0.0.0.0'
+    HOST = "0.0.0.0"
     PORT = 8000
     DEBUG = True
 
     def __init__(self):
-        print('CREATED!!!')
+        print("CREATED!!!")
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class DevelopmentConfig(BaseConfig):
     def __init__(self):
-        print('CREATED!!!')
+        print("CREATED!!!")
 
     DEBUG = True
     PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -33,7 +33,7 @@ def get_env_config() -> str:
         raise ValueError(
             f"The environment config value must be one of these values: {envs}"
         )
-    print(f'mapper: {CONFIGURATION_MAPPER[flask_config_name]}')
+    print(f"mapper: {CONFIGURATION_MAPPER[flask_config_name]}")
     return CONFIGURATION_MAPPER[flask_config_name]
 
 
