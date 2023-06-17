@@ -13,11 +13,8 @@
 
 	$: query = createQuery({
 		queryKey: ['teams'],
-		queryFn: () => api.teams.getAll(),
-		enabled: isOpened,
-		onSuccess(data) {
-			console.log(data);
-		}
+		queryFn: () => api.teams.getAll().then((data) => Object.values(data)),
+		enabled: isOpened
 	});
 
 	const select = (id: number) => {
@@ -45,7 +42,7 @@
 				</thead>
 				<tbody>
 					{#if $query.data}
-						{#each $query.data.teams.filter((team) => team.leagueId != leagueId) as team}
+						{#each $query.data.filter((team) => team.leagueId != leagueId) as team}
 							<tr>
 								<th>
 									<label>

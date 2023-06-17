@@ -9,15 +9,15 @@ MESSAGE_SUCCESS = "Operation completed successfully"
 MESSAGE_NOT_FOUND = "Team not found"
 
 teams = {
-       0: {"id": 0, "name": "Team Alpha"},
-       1: {"id": 1, "name": "Team Bravo"},
-       2: {"id": 2, "name": "Team Charlie"},
+    0: {"id": 0, "name": "Team Alpha", "league_id": 1, "league_points": 12},
+    1: {"id": 1, "name": "Team Bravo", "league_id": 1, "league_points": 10},
+    2: {"id": 2, "name": "Team Charlie", "league_id": 1, "league_points": 8},
 }
+
 
 @teams_ns.route("teams")
 @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
 class ListAllTeams(Resource):
-
     @classmethod
     def get(cls):
         """
@@ -57,7 +57,7 @@ class Team(Resource):
 
         name = data["name"]
         teams[team_id] = {"id": team_id, "name": name}
-        
+
         return Response(status=HTTPStatus.CREATED)
 
     @classmethod
@@ -80,7 +80,7 @@ class Team(Resource):
         if name:
             teams[team_id]["name"] = name
             return Response(status=HTTPStatus.OK)
-        
+
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @classmethod
@@ -93,4 +93,3 @@ class Team(Resource):
 
         teams.pop(team_id)
         return Response(status=HTTPStatus.CREATED)
-

@@ -16,7 +16,7 @@ export const api = {
 		getAll: () => apiClient.get('/test/').then(({ data }) => data)
 	},
 	teams: {
-		getAll: () => apiClient.get<{ teams: Team[] }>('/teams/').then(({ data }) => data)
+		getAll: () => apiClient.get<Record<string, Team>>('/teams').then(({ data }) => data)
 	},
 	leagues: {
 		get: (id: number) => apiClient.get<League>(`/leagues/${id}`).then(({ data }) => data),

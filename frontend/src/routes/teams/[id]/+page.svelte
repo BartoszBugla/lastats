@@ -34,27 +34,65 @@
 				<input type="radio" name="my-accordion-3" />
 				<div class="collapse-title text-xl font-medium">Gracze w zespole</div>
 				<div class="collapse-content">
-					<ul>
-						<li>Gracz 1</li>
-						<li>Gracz 2</li>
-						<li>Gracz 3</li>
-					</ul>
+					<table class="table table-sm w-full p-2 mb-6">
+						<thead>
+							<tr class="border-b border-gray-600">
+								<th>Number</th>
+								<th>Full Name</th>
+								<th>Position</th>
+								<th>Goals</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- lista graczy  -->
+							<tr>
+								<td>16</td>
+								<td>Bartosz Bugla</td>
+								<td>GK</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Bartłomiej Pacia</td>
+								<td>LD</td>
+								<td>5</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 			<div class="collapse collapse-plus bg-base-200">
 				<input type="radio" name="my-accordion-3" />
 				<div class="collapse-title text-xl font-medium">Mecze w sezonie</div>
 				<div class="collapse-content">
-					<p>hello</p>
-				</div>
-			</div>
-			<div class="collapse collapse-plus bg-base-200">
-				<input type="radio" name="my-accordion-3" />
-				<div class="collapse-title text-xl font-medium">
-					Click to open this one and close others
-				</div>
-				<div class="collapse-content">
-					<p>hello</p>
+					<table class="table table-sm w-full p-2 mb-6">
+						<thead>
+							<tr class="border-b border-gray-600">
+								<th>Date</th>
+								<th>Host</th>
+								<th />
+								<th>Guest</th>
+								<th>Result</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- lista meczy  -->
+							<tr class="">
+								<td>06.06.2006</td>
+								<td>ta Druzyna</td>
+								<td>vs</td>
+								<td>inna druzyna</td>
+								<td>3:5</td>
+							</tr>
+							<tr>
+								<td>06.06.2006</td>
+								<td>ta Druzyna</td>
+								<td>vs</td>
+								<td>inna druzyna</td>
+								<td>3:5</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
