@@ -35,9 +35,12 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@zerodevx/svelte-toast": "^0.9.3",
 		"@tanstack/svelte-query": "^4.29.7",
 		"axios": "^1.4.0",
 		"clsx": "^1.2.1",
-		"daisyui": "^2.51.6"
+		"daisyui": "^3.1.0",
+		"svelte-toast": "^1.0.0",
+		"zod": "^3.21.4"
 	}
 }

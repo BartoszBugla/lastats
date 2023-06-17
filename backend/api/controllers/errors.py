@@ -3,6 +3,10 @@ from flask import Blueprint, jsonify
 errors_bp = Blueprint("errors", __name__)
 
 
+@errors_bp.get('/')
+def index():
+    return 'Welcome to Lacrosse API'
+
 def error_response(message: str, code: int, details: str = None):
     return jsonify({"message": message, "code": code, "details": details}), code
 

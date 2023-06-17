@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy.orm import joinedload
 
-from app.extensions import db
-from app.models.league import League
-from app.utils import serialize_all
+from api.extensions import db
+from api.models.league import League
+from api.models.team import Team
+from api.utils import serialize_all
 
 league_bp = Blueprint("leagues", __name__)
 
@@ -16,9 +18,9 @@ def get_all():
 
 @league_bp.route("/", methods=["POST"])
 def add_league():
-    data = request.form.get("name")
+    data = request.json
 
-    new_league = League(name=data)
+    new_league = League(name=data["name"])
 
     db.session.add(new_league)
     db.session.flush()
@@ -45,8 +47,11 @@ def delete_league(id):
     return jsonify({"id": id})
 
 
-@league_bp.route("/<int:id>", methods=["DELETE"])
-def get_by_id(id):
-    league = League.query.filter_by(id=id)
+@league_bp.route("/<int:id>", methods=["GET"])
+def get_by_id(id: int):
+    league: League = League.query.get_or_404(id)
 
-    return league.to_json()
+    serialized = league.serialize()
+    serialized["teams"] = serialize_all(league.teams)
+
+    return jsonify(serialized)

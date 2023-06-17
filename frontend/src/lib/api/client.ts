@@ -3,7 +3,11 @@ import type { CreateLeagueRequest, League } from './models/leagues';
 
 const apiClient = axios.create({
 	baseURL: 'http://localhost:8000',
-	withCredentials: false
+	withCredentials: false,
+	headers: {
+		'Access-Control-Allow-Origin': '*',
+		'content-type': 'application/json'
+	}
 });
 
 export const api = {
@@ -11,9 +15,13 @@ export const api = {
 		getAll: () => apiClient.get('/test/').then(({ data }) => data)
 	},
 	leagues: {
-		getById: (id: number) => apiClient.get<League>(`/leagues/${id}`),
+		get: (id: number) => apiClient.get<League>(`/leagues/${id}`).then(({ data }) => data),
+
 		getAll: () => apiClient.get<League[]>('/leagues/').then(({ data }) => data),
+
 		create: (payload: CreateLeagueRequest) =>
-			apiClient.post('/leagues/', payload).then(({ data }) => data)
+			apiClient.post('/leagues/', payload).then(({ data }) => data),
+
+		delete: (id: number) => apiClient.delete(`/leagues/${id}`)
 	}
 };

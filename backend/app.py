@@ -3,18 +3,18 @@ import logging
 from flask import Flask
 from flask_cors import CORS, cross_origin
 
-from app.extensions import db
+from api.extensions import db
 
-from config import DevelopmentConfig
+from config import get_env_config
 from seed import seed
 
 
 def create_app():
-    """Create Flask app."""
     app = Flask(__name__)
 
     # load config
-    app.config.from_object(DevelopmentConfig())
+    app.config.from_object(get_env_config())
+    print(f"app config: {app.config}")
 
     # extensions
     db.init_app(app)
@@ -26,11 +26,13 @@ def create_app():
     app.logger.setLevel(logging.ERROR)
 
     # register blueprints
-    from app.controllers.errors import errors_bp
-    from app.controllers.leagues_controller import league_bp
+    from api.controllers.errors import errors_bp
+    from api.controllers.leagues_controller import league_bp
+    from api.controllers.teams_controller import teams_bp
 
     app.register_blueprint(errors_bp, url_prefix="/")
     app.register_blueprint(league_bp, url_prefix="/leagues")
+    app.register_blueprint(teams_bp, url_prefix="/teams")
 
     return app
 
@@ -43,4 +45,8 @@ if __name__ == "__main__":
         db.create_all()
         seed()
 
-    app.run(port=app.config["PORT"], debug=True)
+    app.run(
+        host=app.config["HOST"],
+        port=app.config["PORT"],
+        debug=app.config["DEBUG"],
+    )

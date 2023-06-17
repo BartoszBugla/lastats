@@ -1,12 +1,12 @@
 from datetime import datetime
-from app.extensions import db
+from api.extensions import db
 
 
-from app.models.player import Player, PlayerPosition
-from app.models.team import Team
-from app.models.league import League
-from app.models.match import Match
-from app.models.match_event import MatchEvent, MatchEventType
+from api.models.player import Player, PlayerPosition
+from api.models.team import Team
+from api.models.league import League
+from api.models.match import Match
+from api.models.match_event import MatchEvent, MatchEventType
 
 
 def seed():
@@ -31,10 +31,12 @@ def seed_players():
 
 
 def seed_teams():
-    team = Team("Testowy zesp")
-    team = Team("Testowy zesp 2")
+    league = League("Testowa liga")
+    team = Team("Testowy zesp 12", league_id=1)
+    team2 = Team("Testowy zesp 2", league_id=1)
 
     db.session.add(team)
+    db.session.add(team2)
 
 
 def seed_matches():
