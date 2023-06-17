@@ -30,10 +30,8 @@ def create_app():
     # register blueprints
     from api.controllers.errors import errors_bp
     from api.controllers.leagues_controller import league_bp
-    from api.controllers.teams_controller import teams_bp
 
     app.register_blueprint(league_bp, url_prefix="/leagues")
-    app.register_blueprint(teams_bp, url_prefix="/teams")
 
     return app
 
