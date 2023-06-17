@@ -8,7 +8,7 @@ const config = {
   kit: {
     adapter: adapter(),
     prerender:{
-      entries: ['/leagues/*'],
+      entries: ['/leagues/*', '/teams/*'],
     },
     paths: {
         base: dev ? '/base' : process.env.BASE_PATH,

@@ -1,6 +1,8 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { api, type CreateLeagueRequest } from '$lib/api';
 	import TextField from '$lib/components/TextField.svelte';
+	import { routes } from '$lib/config/routes';
 	import { errorToast, successToast } from '$lib/utils/success-toast';
 
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
@@ -18,9 +20,10 @@
 
 	const addLeague = createMutation({
 		mutationFn: (payload: CreateLeagueRequest) => api.leagues.create(payload),
-		onSuccess: () => {
+		onSuccess: (data) => {
 			client.invalidateQueries(['leagues']);
 			successToast('Dodano ligę');
+			goto(routes.league(data.id));
 		},
 		onError: (err) => {
 			errorToast('Nie mozna dodać ligi');

@@ -20,23 +20,26 @@ def seed():
 
 def seed_leagues():
     league = League("Testowa liga")
-
+    league2 = League("Testowa liga 2")
     db.session.add(league)
+    db.session.add(league2)
 
 
 def seed_players():
     player = Player(name="Testowy gracz", position=PlayerPosition.DEFENDER, team_id=1)
-
     db.session.add(player)
 
 
 def seed_teams():
-    league = League("Testowa liga")
-    team = Team("Testowy zesp 12", league_id=1)
-    team2 = Team("Testowy zesp 2", league_id=1)
+    team = Team("Testowy zesp 12", 5, 2)
+    team2 = Team("Testowy zesp 2", 3, 2)
+    team3 = Team("Testowy zesp 3", 3, 2)
+    team4 = Team("Testowy zesp 4", 3, 2)
 
     db.session.add(team)
     db.session.add(team2)
+    db.session.add(team3)
+    db.session.add(team4)
 
 
 def seed_matches():

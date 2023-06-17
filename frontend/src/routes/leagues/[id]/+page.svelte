@@ -1,26 +1,41 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/api';
+	import SelectTeamsDialog from '$lib/components/SelectTeamsDialog.svelte';
 	import { routes } from '$lib/config/routes';
-	import { createQuery } from '@tanstack/svelte-query';
-	import { onMount } from 'svelte';
+	import { useDialog } from '$lib/utils/use-dialog';
+	import { useDynamicRoute } from '$lib/utils/use-dynamic-route';
+	import { createMutation, createQuery } from '@tanstack/svelte-query';
+	import { writable } from 'svelte/store';
 
-	let id: number = 0;
+	let selected = writable<number[]>([]);
 
-	onMount(() => {
-		const idRaw = document.location.pathname.split('/').pop() || '';
+	const cleanSelected = () => selected.set([]);
 
-		id = parseInt(idRaw);
-
-		if (isNaN(id)) {
-			goto(routes.addLeague());
-		}
+	let id = useDynamicRoute<number>({
+		isNumeric: true,
+		fallbackAction: () => goto(routes.leagues())
 	});
 
+	const [isOpenDialog, openDialog, closeDialog] = useDialog();
+
 	$: query = createQuery({
-		queryKey: ['leagues', id],
-		queryFn: () => api.leagues.get(id),
-		enabled: id !== 0
+		queryKey: ['leagues', $id],
+		queryFn: () => api.leagues.get($id),
+		enabled: !!$id
+	});
+
+	const addTeams = createMutation({
+		mutationFn: () => api.leagues.addTeams($id, { ids: $selected }),
+		onError: () => {
+			cleanSelected();
+			closeDialog();
+		},
+		onSuccess: () => {
+			cleanSelected();
+			closeDialog();
+			$query.refetch();
+		}
 	});
 </script>
 
@@ -35,8 +50,12 @@
 				<tr>
 					<th />
 					<th>id</th>
+					<th>Points</th>
 					<th>Name</th>
-					<th />
+					<th>Wins</th>
+					<th>Draws</th>
+					<th>Losses</th>
+					<th>Balance</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -44,15 +63,33 @@
 					<tr>
 						<td />
 						<td>{team.id}</td>
+						<td>12</td>
 						<td>{team.name}</td>
-
+						<td>2</td>
+						<td>3</td>
+						<td>2</td>
+						<td>32:21</td>
 						<td class="flex flex-row gap-6 flex-wrap justify-end">
-							<a class="btn btn-primary btn-sm" href={routes.league(team.id)}>Zobacz</a>
+							<a class="btn btn-primary btn-sm" href={routes.team(team.id)}>Zobacz</a>
 							<button class="btn btn-error btn-outline btn-sm">Delete</button>
 						</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
+		<div class="w-full flex justify-center">
+			<button class="btn btn-primary btn-sm mx-auto btn-outline" on:click={openDialog}
+				>Dodaj zespół</button
+			>
+		</div>
+
+		<SelectTeamsDialog
+			leagueId={$id}
+			onCancel={cleanSelected}
+			isOpened={$isOpenDialog}
+			onSubmit={$addTeams.mutateAsync}
+			{closeDialog}
+			bind:selected={$selected}
+		/>
 	{/if}
 {/if}

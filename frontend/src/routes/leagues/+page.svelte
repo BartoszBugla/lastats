@@ -3,9 +3,8 @@
 	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import { writable } from 'svelte/store';
 
-	let searchValue = writable('');
+	let searchValue = '';
 
 	const client = useQueryClient();
 
@@ -14,15 +13,7 @@
 		queryFn: () => api.leagues.getAll()
 	});
 
-	let data: League[] = [];
-
-	query.subscribe((value) => {
-		data = value.data || [];
-	});
-
-	searchValue.subscribe((value) => {
-		data = $query.data?.filter((league) => league.name.includes(value)) || [];
-	});
+	$: data = $query.data?.filter((league) => league.name.includes(searchValue)) || [];
 
 	const deleteAction = createMutation({
 		mutationFn: (id: number) => api.leagues.delete(id),
@@ -35,7 +26,7 @@
 <section class="flex flex-col">
 	<div>
 		<div class="flex flex-row gap-3 items-end justify-center">
-			<TextField label="Szukaj po nazwie" bind:value={$searchValue} />
+			<TextField label="Szukaj po nazwie" bind:value={searchValue} />
 		</div>
 
 		<div class="overflow-x-auto mx-auto w-auto px-6">
