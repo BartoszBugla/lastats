@@ -4,3 +4,4 @@ sqlalchemy
 jsonpickle
 Flask-Migrate
 flask-cors
+flask_restx
