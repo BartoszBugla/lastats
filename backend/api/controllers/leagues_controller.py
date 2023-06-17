@@ -13,6 +13,7 @@ league_bp = Blueprint("leagues", __name__)
 def get_all():
     leagues = serialize_all(League.query.all())
 
+    print(leagues)
     return jsonify(leagues)
 
 
@@ -55,3 +56,17 @@ def get_by_id(id: int):
     serialized["teams"] = serialize_all(league.teams)
 
     return jsonify(serialized)
+
+
+@league_bp.route("/<int:id>/teams", methods=["POST"])
+def update_teams(id: int):
+    league: League = League.query.get_or_404(id)
+
+    ids = tuple(request.json["ids"])
+
+    for id in ids:
+        Team.query.filter_by(id=id).update({"league_id": league.id})
+
+    db.session.commit()
+
+    return jsonify({"id": "gege"})
