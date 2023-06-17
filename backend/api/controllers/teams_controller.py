@@ -4,8 +4,6 @@ from flask import Blueprint, Response, jsonify, request
 teams_bp = Blueprint("teams", __name__)
 
 
-
-
 @teams_bp.get("/")
 def get_teams():
     return teams

@@ -1,0 +1,37 @@
+name: backend prepare
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+  pull_request:
+    paths:
+      - 'backend/**'
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Create and activate virtual environment
+        run: |
+          python -m venv venv
+          . ./venv/bin/activate
+
+      - name: Install dependencies
+        run: pip --no-cache-dir install --requirement requirements.txt
+
+      - name: Verify code formatting
+        run: black --check .
