@@ -3,13 +3,13 @@ name: frontend prepare
 on:
   pull_request:
 
-defaults:
-  run:
-    working-directory: ./frontend/
-
 jobs:
-  build_and_test:
+  main:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend/
 
     strategy:
       matrix:
