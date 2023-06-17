@@ -3,12 +3,7 @@ from flask import Blueprint, Response, jsonify, request
 
 teams_bp = Blueprint("teams", __name__)
 
-teams = {
-    "teams": [
-        {"id": 1, "name": "Team 1"},
-        {"id": 2, "name": "Team XD"},
-    ]
-}
+
 
 
 @teams_bp.get("/")
