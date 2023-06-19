@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { api } from '$lib/api';
+	import api from '$lib/api';
 	import SelectTeamsDialog from '$lib/components/SelectTeamsDialog.svelte';
 	import { routes } from '$lib/config/routes';
 	import { useDialog } from '$lib/utils/use-dialog';
@@ -21,12 +21,12 @@
 
 	$: query = createQuery({
 		queryKey: ['leagues', $id],
-		queryFn: () => api.leagues.get($id),
+		queryFn: () => api.leagues.getLeagueById($id).then((res) => res.data),
 		enabled: !!$id
 	});
 
 	const addTeams = createMutation({
-		mutationFn: () => api.leagues.addTeams($id, { ids: $selected }),
+		mutationFn: () => api.leagues.postLeagueTeams($id, { ids: $selected }),
 		onError: () => {
 			cleanSelected();
 			closeDialog();

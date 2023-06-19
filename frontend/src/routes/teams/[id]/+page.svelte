@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { api } from '$lib/api';
+	import api from '$lib/api';
 	import { routes } from '$lib/config/routes';
 	import { createQuery } from '@tanstack/svelte-query';
 	import { onMount } from 'svelte';
@@ -19,7 +19,7 @@
 
 	$: query = createQuery({
 		queryKey: ['team', id],
-		queryFn: () => api.leagues.get(id),
+		queryFn: () => api.leagues.getLeagueById(id),
 		enabled: id !== 0
 	});
 </script>

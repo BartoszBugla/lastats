@@ -2,13 +2,14 @@
 	"name": "frontend",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "npm run swagger && vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"swagger": "npx swagger-typescript-api -p http://127.0.0.1:8080/swagger.json  -o ./src/lib -n myApi.ts"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^4.5.10",

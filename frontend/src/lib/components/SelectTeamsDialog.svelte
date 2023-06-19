@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { api } from '$lib/api';
+	import api from '$lib/api';
 	import { createQuery } from '@tanstack/svelte-query';
-	import { onMount } from 'svelte';
 
 	export const leagueId: number = 0;
 
@@ -13,7 +12,7 @@
 
 	$: query = createQuery({
 		queryKey: ['teams'],
-		queryFn: () => api.teams.getAll().then((data) => Object.values(data)),
+		queryFn: () => api.teams.getListAllTeams().then((res) => res.data),
 		enabled: isOpened
 	});
 
@@ -42,7 +41,7 @@
 				</thead>
 				<tbody>
 					{#if $query.data}
-						{#each $query.data.filter((team) => team.leagueId != leagueId) as team}
+						{#each $query.data.filter((team) => team.league_id != leagueId) as team}
 							<tr>
 								<th>
 									<label>
