@@ -1,4 +1,4 @@
-from flask_restx import Namespace, Resource, marshal_with, fields
+from flask_restx import Namespace, fields
 
 teams_ns = Namespace("Teams", description="Operations related to teams")
 

@@ -3,6 +3,8 @@ from flask import Response, request
 
 from http import HTTPStatus
 
+from api.models.team import Team
+
 from .dto.teams import *
 
 MESSAGE_SUCCESS = "Operation completed successfully"
@@ -19,16 +21,16 @@ teams = {
 class ListAllTeams(Resource):
     @classmethod
     @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [team_model])
-    @teams_ns.marshal_with(team_model)
+    @teams_ns.marshal_list_with(team_model)
     def get(cls):
         """
         Returns list of all the teams whose names contain the given query.
         """
-        return teams
+        return Team.query.all()
 
 
 @teams_ns.route("teams/<int:team_id>")
-class Team(Resource):
+class TeamById(Resource):
     @classmethod
     @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, team_model)
     @teams_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)

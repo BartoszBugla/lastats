@@ -317,6 +317,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Leagues
+		 * @name DeleteLeagueById
+		 * @summary Deletes the league with the specified ID
+		 * @request DELETE:/leagues/{league_id}
+		 */
+		deleteLeagueById: (leagueId: number, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/leagues/${leagueId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Leagues
 		 * @name GetLeagueById
 		 * @summary Returns the league with the specified ID
 		 * @request GET:/leagues/{league_id}
@@ -343,21 +358,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				method: 'PUT',
 				body: payload,
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Leagues
-		 * @name DeleteLeagueById
-		 * @summary Deletes the league with the specified ID
-		 * @request DELETE:/leagues/{league_id}
-		 */
-		deleteLeagueById: (leagueId: number, params: RequestParams = {}) =>
-			this.request<void, void>({
-				path: `/leagues/${leagueId}`,
-				method: 'DELETE',
 				...params
 			}),
 
@@ -403,11 +403,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Teams
-		 * @name GetTeam
+		 * @name DeleteTeamById
+		 * @summary Deletes the team with the specified ID
+		 * @request DELETE:/teams/{team_id}
+		 */
+		deleteTeamById: (teamId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/teams/${teamId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Teams
+		 * @name GetTeamById
 		 * @summary Returns the team with the specified ID
 		 * @request GET:/teams/{team_id}
 		 */
-		getTeam: (teamId: number, params: RequestParams = {}) =>
+		getTeamById: (teamId: number, params: RequestParams = {}) =>
 			this.request<TeamModel, void>({
 				path: `/teams/${teamId}`,
 				method: 'GET',
@@ -419,28 +434,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Teams
-		 * @name PostTeam
-		 * @summary Creates a new team
-		 * @request POST:/teams/{team_id}
-		 */
-		postTeam: (teamId: number, payload: CreateTeamRequest, params: RequestParams = {}) =>
-			this.request<void, void>({
-				path: `/teams/${teamId}`,
-				method: 'POST',
-				body: payload,
-				type: ContentType.Json,
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Teams
-		 * @name PutTeam
+		 * @name PutTeamById
 		 * @summary Updates team's data
 		 * @request PUT:/teams/{team_id}
 		 */
-		putTeam: (teamId: number, params: RequestParams = {}) =>
+		putTeamById: (teamId: number, params: RequestParams = {}) =>
 			this.request<void, void>({
 				path: `/teams/${teamId}`,
 				method: 'PUT',
@@ -451,14 +449,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Teams
-		 * @name DeleteTeam
-		 * @summary Deletes the team with the specified ID
-		 * @request DELETE:/teams/{team_id}
+		 * @name PostTeamById
+		 * @summary Creates a new team
+		 * @request POST:/teams/{team_id}
 		 */
-		deleteTeam: (teamId: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+		postTeamById: (teamId: number, payload: CreateTeamRequest, params: RequestParams = {}) =>
+			this.request<void, void>({
 				path: `/teams/${teamId}`,
-				method: 'DELETE',
+				method: 'POST',
+				body: payload,
+				type: ContentType.Json,
 				...params
 			})
 	};

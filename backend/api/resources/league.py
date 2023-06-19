@@ -1,10 +1,11 @@
 from flask_restx import Namespace, Resource, marshal_with, fields
-from flask import Response, request
+from flask import Response, request, abort
 
 from http import HTTPStatus
 
 from api.extensions import db
 from api.models.league import League
+from api.models.team import Team
 
 from .dto.leagues import *
 
@@ -28,7 +29,7 @@ class Leagues(Resource):
     @leagues_ns.response(HTTPStatus.CREATED, MESSAGE_SUCCESS, create_league_response)
     @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @leagues_ns.response(HTTPStatus.CONFLICT, "CONFLICT")
-    @leagues_ns.expect(create_league_request)
+    @leagues_ns.expect(create_league_request, validate=True)
     def post(cls):
         """
         Creates a new league.
@@ -36,15 +37,15 @@ class Leagues(Resource):
         data = request.json
 
         if not data:
-            return {}, HTTPStatus.BAD_REQUEST
+            return abort(HTTPStatus.BAD_REQUEST)
 
-        league = League(data["name"])
+        league: League = League(data["name"])
 
         db.session.add(league)
         db.session.flush()
         db.session.commit()
 
-        return {"id": id}, HTTPStatus.CREATED
+        return {"id": league.id}
 
 
 @leagues_ns.route("leagues/<int:league_id>")
@@ -59,34 +60,26 @@ class LeagueById(Resource):
         """
         league: League = League.query.get_or_404(league_id)
 
-        return league, 200
+        return league
 
     @classmethod
     @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, create_league_response)
     @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
     @leagues_ns.response(HTTPStatus.NO_CONTENT, "NO_CONTENT")
-    @leagues_ns.expect(create_league_request)
-    def put(cls):
+    @leagues_ns.expect(create_league_request, validate=True)
+    def put(cls, league_id):
         """
         Updates league's data.
         """
         data = request.json
 
-        if not data:
-            return Response(status=HTTPStatus.BAD_REQUEST)
+        league: League = League.query.get_or_404(league_id)
 
-        league = League.query.filter_by(id=id)
+        league.update(data)
+        db.session.commit()
 
-        if league is None:
-            return Response(status=HTTPStatus.NOT_FOUND)
-
-        if data["name"]:
-            league.update(data)
-            db.session.commit()
-            return Response(status=HTTPStatus.OK)
-
-        return Response(status=HTTPStatus.NO_CONTENT)
+        return "League updated"
 
     @classmethod
     @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
@@ -95,15 +88,12 @@ class LeagueById(Resource):
         """
         Deletes the league with the specified ID.
         """
-        league = League.query.filter_by(id=league_id)
-
-        if league is None:
-            return Response(status=HTTPStatus.NOT_FOUND)
+        league: League = League.query.get_or_404(league_id)
 
         league.delete()
-
         db.session.commit()
-        return Response(status=HTTPStatus.OK)
+
+        return "League deleted"
 
 
 @leagues_ns.route("leagues/<int:league_id>/teams")
@@ -111,17 +101,20 @@ class LeagueTeams(Resource):
     @classmethod
     @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
     @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
-    @leagues_ns.expect(add_league_teams_request)
+    @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD_REQUEST")
+    @leagues_ns.expect(add_league_teams_request, validate=True)
     def post(cls, league_id):
         """
         Appends teams with the specified IDs to the league.
         """
-        league = League.query.filter_by(id=league_id)
 
-        if league is None:
-            return Response(status=HTTPStatus.NOT_FOUND)
+        data = request.json
 
-        league.delete()
+        teams: list[Team] = Team.query.filter(Team.id.in_(data["ids"])).all()
+
+        for team in teams:
+            team.league_id = league_id
 
         db.session.commit()
-        return Response(status=HTTPStatus.OK)
+
+        return "Teams added to league"

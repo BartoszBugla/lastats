@@ -12,7 +12,7 @@
 
 	$: query = createQuery({
 		queryKey: ['teams'],
-		queryFn: () => api.teams.getListAllTeams().then((data) => Object.values(data)),
+		queryFn: () => api.teams.getListAllTeams().then((res) => res.data),
 		enabled: isOpened
 	});
 
@@ -41,7 +41,7 @@
 				</thead>
 				<tbody>
 					{#if $query.data}
-						{#each $query.data.filter((team) => team.leagueId != leagueId) as team}
+						{#each $query.data.filter((team) => team.league_id != leagueId) as team}
 							<tr>
 								<th>
 									<label>
