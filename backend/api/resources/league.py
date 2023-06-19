@@ -114,7 +114,7 @@ class LeagueTeams(Resource):
     @leagues_ns.expect(add_league_teams_request)
     def post(cls, league_id):
         """
-        Deletes the league with the specified ID.
+        Appends teams with the specified IDs to the league.
         """
         league = League.query.filter_by(id=league_id)
 
