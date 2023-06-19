@@ -16,9 +16,10 @@ teams = {
 
 
 @teams_ns.route("teams")
-@teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
 class ListAllTeams(Resource):
     @classmethod
+    @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [team_model])
+    @teams_ns.marshal_with(team_model)
     def get(cls):
         """
         Returns list of all the teams whose names contain the given query.
@@ -29,8 +30,9 @@ class ListAllTeams(Resource):
 @teams_ns.route("teams/<int:team_id>")
 class Team(Resource):
     @classmethod
-    @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
+    @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, team_model)
     @teams_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
+    @teams_ns.marshal_with(team_model)
     def get(cls, team_id):
         """
         Returns the team with the specified ID.
@@ -44,6 +46,7 @@ class Team(Resource):
     @teams_ns.response(HTTPStatus.CREATED, MESSAGE_SUCCESS)
     @teams_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @teams_ns.response(HTTPStatus.CONFLICT, "CONFLICT")
+    @teams_ns.expect(create_team_request)
     def post(cls, team_id):
         """
         Creates a new team.

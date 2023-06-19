@@ -3,6 +3,7 @@
 	import api from '$lib/api';
 	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
+	import type { CreateLeagueRequest } from '$lib/myApi';
 	import { errorToast, successToast } from '$lib/utils/success-toast';
 
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
@@ -45,7 +46,7 @@
 	const handleSubmit = (e: Event) => {
 		e.preventDefault();
 
-		const formValues = {
+		const formValues: CreateLeagueRequest = {
 			name
 		};
 

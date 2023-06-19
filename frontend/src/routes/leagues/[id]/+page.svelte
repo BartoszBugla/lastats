@@ -21,12 +21,12 @@
 
 	$: query = createQuery({
 		queryKey: ['leagues', $id],
-		queryFn: () => api.teams.getTeam($id),
+		queryFn: () => api.leagues.getLeagueById($id).then((res) => res.data),
 		enabled: !!$id
 	});
 
 	const addTeams = createMutation({
-		mutationFn: () => api.teams.postTeam($id, { ids: $selected }),
+		mutationFn: () => api.leagues.postLeagueTeams($id, { ids: $selected }),
 		onError: () => {
 			cleanSelected();
 			closeDialog();

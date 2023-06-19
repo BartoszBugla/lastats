@@ -14,10 +14,10 @@ MESSAGE_NOT_FOUND = "League not found"
 
 
 @leagues_ns.route("leagues")
-@leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [league_model])
 class Leagues(Resource):
     @classmethod
-    @marshal_with(league_model)
+    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [league_model])
+    @leagues_ns.marshal_with(league_model)
     def get(cls):
         """
         Returns list of all the leagues
@@ -25,9 +25,10 @@ class Leagues(Resource):
         return League.query.all()
 
     @classmethod
-    @leagues_ns.response(HTTPStatus.CREATED, MESSAGE_SUCCESS)
+    @leagues_ns.response(HTTPStatus.CREATED, MESSAGE_SUCCESS, create_league_response)
     @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @leagues_ns.response(HTTPStatus.CONFLICT, "CONFLICT")
+    @leagues_ns.expect(create_league_request)
     def post(cls):
         """
         Creates a new league.
@@ -49,9 +50,9 @@ class Leagues(Resource):
 @leagues_ns.route("leagues/<int:league_id>")
 class LeagueById(Resource):
     @classmethod
-    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
+    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, league_model)
     @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
-    @marshal_with(league_model)
+    @leagues_ns.marshal_with(league_model)
     def get(cls, league_id):
         """
         Returns the league with the specified ID.
@@ -61,10 +62,11 @@ class LeagueById(Resource):
         return league, 200
 
     @classmethod
-    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
+    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, create_league_response)
     @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
     @leagues_ns.response(HTTPStatus.NO_CONTENT, "NO_CONTENT")
+    @leagues_ns.expect(create_league_request)
     def put(cls):
         """
         Updates league's data.
@@ -87,11 +89,13 @@ class LeagueById(Resource):
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @classmethod
-    def delete(cls, team_id):
+    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
+    @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
+    def delete(cls, league_id):
         """
         Deletes the league with the specified ID.
         """
-        league = League.query.filter_by(id=id)
+        league = League.query.filter_by(id=league_id)
 
         if league is None:
             return Response(status=HTTPStatus.NOT_FOUND)
@@ -99,4 +103,25 @@ class LeagueById(Resource):
         league.delete()
 
         db.session.commit()
-        return Response(status=HTTPStatus.CREATED)
+        return Response(status=HTTPStatus.OK)
+
+
+@leagues_ns.route("leagues/<int:league_id>/teams")
+class LeagueTeams(Resource):
+    @classmethod
+    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
+    @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
+    @leagues_ns.expect(add_league_teams_request)
+    def post(cls, league_id):
+        """
+        Deletes the league with the specified ID.
+        """
+        league = League.query.filter_by(id=league_id)
+
+        if league is None:
+            return Response(status=HTTPStatus.NOT_FOUND)
+
+        league.delete()
+
+        db.session.commit()
+        return Response(status=HTTPStatus.OK)
