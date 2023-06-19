@@ -1,9 +1,9 @@
-from flask_restx import Namespace, Resource
-from flask import Response, abort, request
+from flask_restx import Resource
+from flask import Response, request
 
 from http import HTTPStatus
 
-teams_ns = Namespace("Teams", description="Operations related to teams")
+from .dto.teams import *
 
 MESSAGE_SUCCESS = "Operation completed successfully"
 MESSAGE_NOT_FOUND = "Team not found"

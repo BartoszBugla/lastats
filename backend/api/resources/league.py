@@ -6,34 +6,11 @@ from http import HTTPStatus
 from api.extensions import db
 from api.models.league import League
 
+from .dto.leagues import *
 
-leagues_ns = Namespace("Leagues", description="Operations related to leagues")
 
 MESSAGE_SUCCESS = "Operation completed successfully"
 MESSAGE_NOT_FOUND = "League not found"
-
-team_model = leagues_ns.model(
-    "team",
-    {
-        "id": fields.Integer(required=True, description="Team ID"),
-        "name": fields.String(required=True, description="Team name"),
-        "league_id": fields.Integer(required=True, description="League ID"),
-        "league_name": fields.String(required=True, description="League name"),
-    },
-)
-
-league_model = leagues_ns.model(
-    "league",
-    {
-        "id": fields.Integer(required=True, description="League ID"),
-        "name": fields.String(required=True, description="League name"),
-        "teams": fields.List(
-            fields.Nested(team_model),
-            required=True,
-            description="List of teams in the league",
-        ),
-    },
-)
 
 
 @leagues_ns.route("leagues")
