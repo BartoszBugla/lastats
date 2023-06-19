@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, marshal_with, fields
 teams_ns = Namespace("Teams", description="Operations related to teams")
 
 team_model = teams_ns.model(
-    "Team",
+    "TeamModel",
     {
         "id": fields.Integer(required=True, description="Team ID"),
         "name": fields.String(required=True, description="Team name"),

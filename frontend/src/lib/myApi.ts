@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-export interface Team {
+export interface TeamModel {
 	/** Team ID */
 	id: number;
 	/** Team name */
@@ -30,13 +30,13 @@ export interface CreateLeagueRequest {
 	name: string;
 }
 
-export interface League {
+export interface LeagueModel {
 	/** League ID */
 	id: number;
 	/** League name */
 	name: string;
 	/** List of teams in the league */
-	teams: Team[];
+	teams: TeamModel[];
 }
 
 export interface CreateLeagueResponse {
@@ -289,7 +289,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/leagues
 		 */
 		getLeagues: (params: RequestParams = {}) =>
-			this.request<League[], any>({
+			this.request<LeagueModel[], any>({
 				path: `/leagues`,
 				method: 'GET',
 				format: 'json',
@@ -309,6 +309,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/leagues`,
 				method: 'POST',
 				body: payload,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Leagues
+		 * @name GetLeagueById
+		 * @summary Returns the league with the specified ID
+		 * @request GET:/leagues/{league_id}
+		 */
+		getLeagueById: (leagueId: number, params: RequestParams = {}) =>
+			this.request<LeagueModel, void>({
+				path: `/leagues/${leagueId}`,
+				method: 'GET',
 				format: 'json',
 				...params
 			}),
@@ -349,24 +365,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Leagues
-		 * @name GetLeagueById
-		 * @summary Returns the league with the specified ID
-		 * @request GET:/leagues/{league_id}
-		 */
-		getLeagueById: (leagueId: number, params: RequestParams = {}) =>
-			this.request<League, void>({
-				path: `/leagues/${leagueId}`,
-				method: 'GET',
-				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Leagues
 		 * @name PostLeagueTeams
-		 * @summary Deletes the league with the specified ID
+		 * @summary Appends teams with the specified IDs to the league
 		 * @request POST:/leagues/{league_id}/teams
 		 */
 		postLeagueTeams: (
@@ -392,10 +392,43 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/teams
 		 */
 		getListAllTeams: (params: RequestParams = {}) =>
-			this.request<Team[], any>({
+			this.request<TeamModel[], any>({
 				path: `/teams`,
 				method: 'GET',
 				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Teams
+		 * @name GetTeam
+		 * @summary Returns the team with the specified ID
+		 * @request GET:/teams/{team_id}
+		 */
+		getTeam: (teamId: number, params: RequestParams = {}) =>
+			this.request<TeamModel, void>({
+				path: `/teams/${teamId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Teams
+		 * @name PostTeam
+		 * @summary Creates a new team
+		 * @request POST:/teams/{team_id}
+		 */
+		postTeam: (teamId: number, payload: CreateTeamRequest, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/teams/${teamId}`,
+				method: 'POST',
+				body: payload,
+				type: ContentType.Json,
 				...params
 			}),
 
@@ -426,39 +459,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			this.request<void, any>({
 				path: `/teams/${teamId}`,
 				method: 'DELETE',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Teams
-		 * @name GetTeam
-		 * @summary Returns the team with the specified ID
-		 * @request GET:/teams/{team_id}
-		 */
-		getTeam: (teamId: number, params: RequestParams = {}) =>
-			this.request<Team, void>({
-				path: `/teams/${teamId}`,
-				method: 'GET',
-				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Teams
-		 * @name PostTeam
-		 * @summary Creates a new team
-		 * @request POST:/teams/{team_id}
-		 */
-		postTeam: (teamId: number, payload: CreateTeamRequest, params: RequestParams = {}) =>
-			this.request<void, void>({
-				path: `/teams/${teamId}`,
-				method: 'POST',
-				body: payload,
-				type: ContentType.Json,
 				...params
 			})
 	};

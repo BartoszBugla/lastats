@@ -6,7 +6,7 @@ leagues_ns = Namespace("Leagues", description="Operations related to leagues")
 
 
 league_model = leagues_ns.model(
-    "League",
+    "LeagueModel",
     {
         "id": fields.Integer(required=True, description="League ID"),
         "name": fields.String(required=True, description="League name"),
