@@ -18,6 +18,7 @@ export const useDynamicRoute = <T = unknown>({
 		parameter.set(idRaw as unknown as T);
 
 		if (isNumeric) {
+			parameter.set(parseInt(idRaw) as unknown as T);
 			if (isNaN(parseInt(idRaw)) && fallbackAction) {
 				fallbackAction();
 			}

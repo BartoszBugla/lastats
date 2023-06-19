@@ -2,8 +2,7 @@
 	import api from '$lib/api';
 	import { createQuery } from '@tanstack/svelte-query';
 
-	export const leagueId: number = 0;
-
+	export let leagueId: number = 0;
 	export let isOpened: boolean = false;
 	export let selected: number[] = [];
 	export let closeDialog: () => void;
@@ -12,7 +11,10 @@
 
 	$: query = createQuery({
 		queryKey: ['teams'],
-		queryFn: () => api.teams.getListAllTeams().then((res) => res.data),
+		queryFn: () =>
+			api.teams
+				.getListAllTeams()
+				.then((res) => res.data.filter((team) => team.league_id !== leagueId)),
 		enabled: isOpened
 	});
 
@@ -41,7 +43,7 @@
 				</thead>
 				<tbody>
 					{#if $query.data}
-						{#each $query.data.filter((team) => team.league_id != leagueId) as team}
+						{#each $query.data as team}
 							<tr>
 								<th>
 									<label>
