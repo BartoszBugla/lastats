@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { api } from '$lib/api';
+	import api from '$lib/api';
 	import { createQuery } from '@tanstack/svelte-query';
-	import { onMount } from 'svelte';
 
 	export const leagueId: number = 0;
 
@@ -13,7 +12,7 @@
 
 	$: query = createQuery({
 		queryKey: ['teams'],
-		queryFn: () => api.teams.getAll().then((data) => Object.values(data)),
+		queryFn: () => api.teams.getListAllTeams().then((data) => Object.values(data)),
 		enabled: isOpened
 	});
 

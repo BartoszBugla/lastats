@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { api, type League } from '$lib/api';
+	import api from '$lib/api';
 	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
@@ -10,13 +10,13 @@
 
 	const query = createQuery({
 		queryKey: ['leagues'],
-		queryFn: () => api.leagues.getAll()
+		queryFn: async () => await api.leagues.getLeagues().then((res) => res.data)
 	});
 
 	$: data = $query.data?.filter((league) => league.name.includes(searchValue)) || [];
 
 	const deleteAction = createMutation({
-		mutationFn: (id: number) => api.leagues.delete(id),
+		mutationFn: (id: number) => api.leagues.deleteLeagueById(id),
 		onSuccess: () => {
 			client.invalidateQueries(['leagues']);
 		}

@@ -15,7 +15,7 @@ MESSAGE_NOT_FOUND = "League not found"
 
 @leagues_ns.route("leagues")
 @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [league_model])
-class ListAllTeams(Resource):
+class Leagues(Resource):
     @classmethod
     @marshal_with(league_model)
     def get(cls):
@@ -47,7 +47,7 @@ class ListAllTeams(Resource):
 
 
 @leagues_ns.route("leagues/<int:league_id>")
-class Team(Resource):
+class LeagueById(Resource):
     @classmethod
     @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
     @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
@@ -65,7 +65,7 @@ class Team(Resource):
     @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @leagues_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
     @leagues_ns.response(HTTPStatus.NO_CONTENT, "NO_CONTENT")
-    def put(cls, team_id):
+    def put(cls):
         """
         Updates league's data.
         """

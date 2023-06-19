@@ -28,6 +28,10 @@ def create_app():
     app.logger.addHandler(logging.StreamHandler())
     app.logger.setLevel(logging.ERROR)
 
+    @app.route("/swagger.json")
+    def spec():
+        return api.as_json()
+
     return app
 
 
