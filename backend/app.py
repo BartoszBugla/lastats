@@ -3,6 +3,7 @@ import logging
 from flask import Flask
 from flask_cors import CORS, cross_origin
 
+
 from api.extensions import db
 from api.api_extension import api
 
@@ -26,13 +27,6 @@ def create_app():
     # set logger
     app.logger.addHandler(logging.StreamHandler())
     app.logger.setLevel(logging.ERROR)
-
-    # register blueprints
-    from api.controllers.errors import errors_bp
-    from api.controllers.leagues_controller import league_bp
-
-    # TODO: migrate to use flask_restx (just like /teams)
-    app.register_blueprint(league_bp, url_prefix="/leagues")
 
     return app
 
