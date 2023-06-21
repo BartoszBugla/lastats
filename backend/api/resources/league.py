@@ -2,12 +2,15 @@ from flask_restx import Namespace, Resource, marshal_with, fields
 from flask import Response, request, abort
 
 from http import HTTPStatus
+from dateutil import parser
 
 from api.extensions import db
 from api.models.league import League
 from api.models.team import Team
+from api.models.match import Match
 
-from .dto.leagues import *
+from .dto.league_dto import *
+from .dto.base_models import *
 
 
 MESSAGE_SUCCESS = "Operation completed successfully"
@@ -76,7 +79,8 @@ class LeagueById(Resource):
 
         league: League = League.query.get_or_404(league_id)
 
-        league.update(data)
+        league.name = data["name"]
+
         db.session.commit()
 
         return "League updated"
@@ -90,7 +94,7 @@ class LeagueById(Resource):
         """
         league: League = League.query.get_or_404(league_id)
 
-        league.delete()
+        db.session.delete(league)
         db.session.commit()
 
         return "League deleted"
@@ -118,3 +122,36 @@ class LeagueTeams(Resource):
         db.session.commit()
 
         return "Teams added to league"
+
+
+@leagues_ns.route("leagues/<int:league_id>/matches")
+class LeagueMathes(Resource):
+    @classmethod
+    @leagues_ns.response(HTTPStatus.OK, "Match Added to league")
+    @leagues_ns.response(HTTPStatus.BAD_REQUEST, "BAD_REQUEST")
+    @leagues_ns.expect(add_match_to_league_request, validate=True)
+    def post(cls, league_id):
+        """
+        Create match withing the league.
+        """
+        data = request.json
+
+        new_match = Match(
+            parser.parse(data["time"]),
+            data["location"],
+            data["home_team_id"],
+            data["guest_team_id"],
+            league_id,
+        )
+
+        db.session.add(new_match)
+        db.session.commit()
+
+        return "Match Added to league"
+
+    @classmethod
+    @leagues_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [match_model])
+    @marshal_with(match_model)
+    def get(cls, league_id):
+        matches: list[Match] = Match.query.filter(Match.league_id == league_id).all()
+        return matches

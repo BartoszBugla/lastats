@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from api.extensions import db
 
 
@@ -45,9 +45,17 @@ def seed_teams():
 def seed_matches():
     match_item = Match(
         time=datetime.utcnow(),
-        location="test",
-        host_team_id=1,
+        location="Warszawa",
+        home_team_id=1,
         guest_team_id=2,
+        league_id=1,
+    )
+
+    match_item2 = Match(
+        time=datetime.utcnow() - timedelta(days=1),
+        location="Warszawa",
+        home_team_id=4,
+        guest_team_id=3,
         league_id=1,
     )
 
@@ -57,3 +65,4 @@ def seed_matches():
     ]
 
     db.session.add(match_item)
+    db.session.add(match_item2)

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
+	import MatchesTable from '$lib/components/MatchesTable.svelte';
 	import SelectTeamsDialog from '$lib/components/SelectTeamsDialog.svelte';
 	import { routes } from '$lib/config/routes';
 	import { useDialog } from '$lib/utils/use-dialog';
@@ -25,6 +26,12 @@
 		enabled: !!$id
 	});
 
+	$: matchesQuery = createQuery({
+		queryKey: ['league-matches', $id],
+		queryFn: () => api.leagues.getLeagueMathes($id).then((res) => res.data),
+		enabled: !!$id
+	});
+
 	const addTeams = createMutation({
 		mutationFn: () => api.leagues.postLeagueTeams($id, { ids: $selected }),
 		onError: () => {
@@ -44,34 +51,36 @@
 		<span class="loading loading-spinner loading-lg mx-auto" />
 	{:else if $query.data}
 		<h1 class="mx-auto text-xl text-center my-6">{$query.data.name}</h1>
-		<table class="table w-full p-2 mb-6">
+		<table class="table w-full p-2 mb-6 text-center">
 			<!-- head -->
 			<thead>
 				<tr>
-					<th />
-					<th>id</th>
-					<th>Points</th>
-					<th>Name</th>
-					<th>Wins</th>
-					<th>Draws</th>
-					<th>Losses</th>
-					<th>Balance</th>
+					<th>Pozycja</th>
+					<th>Punkty</th>
+					<th>Nazwa</th>
+					<th>Wygrane</th>
+					<th>Remisy</th>
+					<th>Porazki</th>
 				</tr>
 			</thead>
 			<tbody>
-				{#each $query.data.teams as team}
+				{#each $query.data.teams
+					.map((team) => ({ ...team, league_points: team.wins * 3 + team.draws * 1 }))
+					.sort((a, b) => b.league_points - a.league_points) as team, index}
 					<tr>
-						<td />
-						<td>{team.id}</td>
-						<td>12</td>
-						<td>{team.name}</td>
-						<td>2</td>
-						<td>3</td>
-						<td>2</td>
-						<td>32:21</td>
+						<td>{index + 1}</td>
+						<td>{team.league_points}</td>
+						<td>
+							<a class="link link-primary" href={routes.team(team.id)}>
+								{team.name}
+							</a>
+						</td>
+						<td>{team.wins}</td>
+						<td>{team.draws}</td>
+						<td>{team.losses}</td>
+
 						<td class="flex flex-row gap-6 flex-wrap justify-end">
-							<a class="btn btn-primary btn-sm" href={routes.team(team.id)}>Zobacz</a>
-							<button class="btn btn-error btn-outline btn-sm">Delete</button>
+							<button class="btn btn-error btn-outline btn-sm">Usuń z ligi</button>
 						</td>
 					</tr>
 				{/each}
@@ -82,6 +91,12 @@
 				>Dodaj zespół</button
 			>
 		</div>
+		<hr class="my-6" />
+
+		<details class="collapse collapse-open collapse-plus max-w-2xl mx-auto shadow-xl mb-5">
+			<summary class="collapse-title">Mecze w danej lidze</summary>
+			<div class="collapse-content"><MatchesTable data={$matchesQuery.data} /></div>
+		</details>
 
 		<SelectTeamsDialog
 			leagueId={$id}

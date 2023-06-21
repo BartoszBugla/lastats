@@ -3,9 +3,11 @@ from flask import Response, request
 
 from http import HTTPStatus
 
+from api.extensions import db
 from api.models.team import Team
 
-from .dto.teams import *
+from .dto.team_dto import *
+from .dto.base_models import *
 
 MESSAGE_SUCCESS = "Operation completed successfully"
 MESSAGE_NOT_FOUND = "Team not found"
@@ -18,7 +20,7 @@ teams = {
 
 
 @teams_ns.route("teams")
-class ListAllTeams(Resource):
+class Teams(Resource):
     @classmethod
     @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, [team_model])
     @teams_ns.marshal_list_with(team_model)
@@ -27,6 +29,29 @@ class ListAllTeams(Resource):
         Returns list of all the teams whose names contain the given query.
         """
         return Team.query.all()
+
+    @classmethod
+    @teams_ns.response(HTTPStatus.CREATED, MESSAGE_SUCCESS)
+    @teams_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
+    @teams_ns.response(HTTPStatus.CONFLICT, "CONFLICT")
+    @teams_ns.expect(create_team_request)
+    def post(cls):
+        """
+        Creates a new team.
+        """
+        data: dict = request.json
+
+        new_team = Team(
+            data["name"],
+            data["league_points"] if "league_points" in data else None,
+            data["wins"] if "wins" in data else None,
+            data["draws"] if "draws" in data else None,
+            data["losses"] if "losses" in data else None,
+        )
+        db.session.add(new_team)
+        db.session.commit()
+
+        return Response(status=HTTPStatus.CREATED)
 
 
 @teams_ns.route("teams/<int:team_id>")
@@ -43,27 +68,6 @@ class TeamById(Resource):
             return Response(status=HTTPStatus.NOT_FOUND)
 
         return Response(response=teams[team_id], status=HTTPStatus.OK)
-
-    @classmethod
-    @teams_ns.response(HTTPStatus.CREATED, MESSAGE_SUCCESS)
-    @teams_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
-    @teams_ns.response(HTTPStatus.CONFLICT, "CONFLICT")
-    @teams_ns.expect(create_team_request)
-    def post(cls, team_id):
-        """
-        Creates a new team.
-        """
-        data = request.json
-        if not data:
-            return Response(status=HTTPStatus.BAD_REQUEST)
-
-        if team_id in teams:
-            return Response(status=HTTPStatus.CONFLICT)
-
-        name = data["name"]
-        teams[team_id] = {"id": team_id, "name": name}
-
-        return Response(status=HTTPStatus.CREATED)
 
     @classmethod
     @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
