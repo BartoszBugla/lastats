@@ -2,46 +2,45 @@
 	import api from '$lib/api';
 	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
-	import type { CreateLeagueRequest, LeagueModel } from '$lib/myApi';
+	import type { CreateTeamRequest, TeamModel } from '$lib/myApi';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import { bind } from 'svelte/internal';
 
 	let searchValue = '';
 
 	const client = useQueryClient();
 
 	const query = createQuery({
-		queryKey: ['leagues'],
-		queryFn: async () => await api.leagues.getLeagues().then((res) => res.data)
+		queryKey: ['teams'],
+		queryFn: async () => await api.teams.getTeams().then((res) => res.data)
 	});
 
-	$: data = $query.data?.filter((league) => league.name.includes(searchValue)) || [];
+	$: data = $query.data?.filter((team) => team.name.includes(searchValue)) || [];
 
 	const deleteAction = createMutation({
-		mutationFn: (id: number) => api.leagues.deleteLeagueById(id),
+		mutationFn: (id: number) => api.teams.deleteTeamById(id),
 		onSuccess: () => {
-			client.invalidateQueries(['leagues']);
+			client.invalidateQueries(['teams']);
 		}
 	});
 
-	let edited: (CreateLeagueRequest & { id: number }) | undefined;
+	let edited: (CreateTeamRequest & { id: number }) | undefined;
 
-	const setEdited = (league?: LeagueModel) => {
-		if (!league) {
+	const setEdited = (team?: TeamModel) => {
+		if (!team) {
 			edited = undefined;
 		} else {
 			edited = {
-				id: league.id,
-				name: league.name
+				id: team.id,
+				name: team.name
 			};
 		}
 	};
 
 	const updateAction = createMutation({
-		mutationFn: ({ id, ...edited }: CreateLeagueRequest & { id: number }) =>
-			api.leagues.putLeagueById(id, edited),
+		mutationFn: ({ id, ...edited }: CreateTeamRequest & { id: number }) =>
+			api.teams.putTeamById(id, edited),
 		onSuccess: () => {
-			client.invalidateQueries(['leagues']);
+			client.invalidateQueries(['teams']);
 		}
 	});
 </script>
@@ -65,8 +64,8 @@
 					{#if $query.isLoading}
 						<span class="loading loading-spinner loading-lg mx-auto" />
 					{:else if $query.isSuccess}
-						{#each data as league}
-							{#if edited && league.id === edited.id}
+						{#each data as team}
+							{#if edited && team.id === edited.id}
 								<tr>
 									<td> <TextField label="" bind:value={edited.name} /></td>
 
@@ -83,18 +82,18 @@
 							{:else}
 								<tr>
 									<td>
-										<a href={routes.league(league.id)} class="link link-secondary">
-											{league.name}
+										<a href={routes.team(team.id)} class="link link-primary">
+											{team.name}
 										</a>
 									</td>
 
 									<td class="flex flex-row gap-6 flex-wrap justify-end">
-										<button class="btn btn-primary btn-sm" on:click={() => setEdited(league)}
+										<button class="btn btn-primary btn-sm" on:click={() => setEdited(team)}
 											>Edytuj</button
 										>
 										<button
 											class="btn btn-error btn-outline btn-sm"
-											on:click={() => $deleteAction.mutateAsync(league.id)}>Delete</button
+											on:click={() => $deleteAction.mutateAsync(team.id)}>Delete</button
 										>
 									</td>
 								</tr>

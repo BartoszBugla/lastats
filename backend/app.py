@@ -32,16 +32,17 @@ def create_app():
     def spec():
         return api.as_json()
 
+    with app.app_context():
+        print("Dropping all tables and creating new ones...")
+        db.drop_all()
+        db.create_all()
+        seed()
+
     return app
 
 
 if __name__ == "__main__":
     app = create_app()
-
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-        seed()
 
     app.run(
         host=app.config["HOST"],

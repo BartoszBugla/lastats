@@ -6,3 +6,4 @@ Flask-Migrate
 flask-cors
 flask_restx
 black
+python-dateutil

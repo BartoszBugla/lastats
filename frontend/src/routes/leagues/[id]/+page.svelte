@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
+	import MatchesTable from '$lib/components/MatchesTable.svelte';
 	import SelectTeamsDialog from '$lib/components/SelectTeamsDialog.svelte';
+	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
+	import type { CreateLeagueRequest } from '$lib/myApi';
 	import { useDialog } from '$lib/utils/use-dialog';
 	import { useDynamicRoute } from '$lib/utils/use-dynamic-route';
-	import { createMutation, createQuery } from '@tanstack/svelte-query';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { writable } from 'svelte/store';
+
+	const client = useQueryClient();
 
 	let selected = writable<number[]>([]);
 
@@ -25,6 +30,12 @@
 		enabled: !!$id
 	});
 
+	$: matchesQuery = createQuery({
+		queryKey: ['league-matches', $id],
+		queryFn: () => api.leagues.getLeagueMathes($id).then((res) => res.data),
+		enabled: !!$id
+	});
+
 	const addTeams = createMutation({
 		mutationFn: () => api.leagues.postLeagueTeams($id, { ids: $selected }),
 		onError: () => {
@@ -37,59 +48,116 @@
 			$query.refetch();
 		}
 	});
+
+	const update = createMutation({
+		mutationFn: (payload: CreateLeagueRequest) => api.leagues.putLeagueById($id, payload),
+		onSuccess: () => {
+			client.invalidateQueries(['leagues', $id]);
+		}
+	});
+
+	$: deleteAction = createMutation({
+		mutationFn: () => api.leagues.deleteLeagueById($id),
+		onSuccess: () => {
+			client.invalidateQueries(['leagues', $id]);
+			goto(routes.teams());
+		}
+	});
+
+	let edited: CreateLeagueRequest | undefined;
+
+	const setEditing = () => {
+		console.log(edited);
+		if (!$query.data) return;
+		if (edited) {
+			edited = undefined;
+		} else {
+			edited = {
+				name: $query.data.name
+			};
+		}
+	};
 </script>
 
 {#if id}
-	{#if $query.isLoading}
-		<span class="loading loading-spinner loading-lg mx-auto" />
-	{:else if $query.data}
-		<h1 class="mx-auto text-xl text-center my-6">{$query.data.name}</h1>
-		<table class="table w-full p-2 mb-6">
-			<!-- head -->
-			<thead>
-				<tr>
-					<th />
-					<th>id</th>
-					<th>Points</th>
-					<th>Name</th>
-					<th>Wins</th>
-					<th>Draws</th>
-					<th>Losses</th>
-					<th>Balance</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each $query.data.teams as team}
-					<tr>
-						<td />
-						<td>{team.id}</td>
-						<td>12</td>
-						<td>{team.name}</td>
-						<td>2</td>
-						<td>3</td>
-						<td>2</td>
-						<td>32:21</td>
-						<td class="flex flex-row gap-6 flex-wrap justify-end">
-							<a class="btn btn-primary btn-sm" href={routes.team(team.id)}>Zobacz</a>
-							<button class="btn btn-error btn-outline btn-sm">Delete</button>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-		<div class="w-full flex justify-center">
-			<button class="btn btn-primary btn-sm mx-auto btn-outline" on:click={openDialog}
-				>Dodaj zespół</button
-			>
-		</div>
+	<div class="flex flex-row items-center justify-center gap-3 my-3">
+		{#if edited}
+			<TextField label="" bind:value={edited.name} />
+			<button
+				class="btn btn-primary btn-sm"
+				on:click={() => {
+					if (edited) $update.mutateAsync(edited);
+					setEditing();
+				}}
+				>Zapisz
+			</button>
+		{:else}
+			<h1 class="text-xl text-center my-6 font-bold">{$query.data ? $query.data.name : ''}</h1>
+			<button class="btn btn-primary btn-outline btn-sm" on:click={setEditing}>Edytuj </button>
+			<button class="btn btn-error btn-outline btn-sm" on:click={() => $deleteAction.mutateAsync()}
+				>Usun
+			</button>
+		{/if}
+	</div>
 
-		<SelectTeamsDialog
-			leagueId={$id}
-			onCancel={cleanSelected}
-			isOpened={$isOpenDialog}
-			onSubmit={$addTeams.mutateAsync}
-			{closeDialog}
-			bind:selected={$selected}
-		/>
-	{/if}
+	<div class="collapse collapse-plus bg-base-200">
+		<input type="radio" name="my-accordion-3" />
+		<div class="collapse-title text-xl font-medium">Tabela Ligi</div>
+		<div class="collapse-content">
+			{#if $query.isLoading}
+				<span class="loading loading-spinner loading-lg mx-auto" />
+			{:else if $query.data}
+				<table class="table w-full p-2 mb-6 text-center">
+					<!-- head -->
+					<thead>
+						<tr>
+							<th>Pozycja</th>
+							<th>Punkty</th>
+							<th>Nazwa</th>
+							<th>Wygrane</th>
+							<th>Remisy</th>
+							<th>Porazki</th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each $query.data.teams
+							.map((team) => ({ ...team, league_points: team.wins * 3 + team.draws * 1 }))
+							.sort((a, b) => b.league_points - a.league_points) as team, index}
+							<tr>
+								<td>{index + 1}</td>
+								<td>{team.league_points}</td>
+								<td>
+									<a class="link link-primary" href={routes.team(team.id)}>
+										{team.name}
+									</a>
+								</td>
+								<td>{team.wins}</td>
+								<td>{team.draws}</td>
+								<td>{team.losses}</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+				<button on:click={openDialog} class="btn btn-outline btn-primary btn-sm mx-auto"
+					>Dodaj zespół</button
+				>
+			{/if}
+		</div>
+	</div>
+	<div class="collapse collapse-plus bg-base-200">
+		<input type="radio" name="my-accordion-3" />
+		<div class="collapse-title text-xl font-medium">Mecze w lidze</div>
+		<div class="collapse-content">
+			<MatchesTable data={$matchesQuery.data} />
+		</div>
+	</div>
+
+	<SelectTeamsDialog
+		leagueId={$id}
+		onCancel={cleanSelected}
+		isOpened={$isOpenDialog}
+		onSubmit={$addTeams.mutateAsync}
+		{closeDialog}
+		bind:selected={$selected}
+	/>
 {/if}

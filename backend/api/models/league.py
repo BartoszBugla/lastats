@@ -11,7 +11,8 @@ class League(BaseModel):
 
     name = db.Column(db.String(100), nullable=False, unique=True)
 
-    teams = db.relationship("Team", backref="leagues")
+    teams = db.relationship("Team", back_populates="league", lazy=True)
+    matches = db.relationship("Match", back_populates="league", lazy=True)
 
     def __init__(self, name):
         self.name = name
