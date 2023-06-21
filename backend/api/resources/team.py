@@ -64,41 +64,36 @@ class TeamById(Resource):
         """
         Returns the team with the specified ID.
         """
-        if team_id not in teams:
-            return Response(status=HTTPStatus.NOT_FOUND)
-
-        return Response(response=teams[team_id], status=HTTPStatus.OK)
+        return Team.query.get(team_id)
 
     @classmethod
     @teams_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
     @teams_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
     @teams_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
     @teams_ns.response(HTTPStatus.NO_CONTENT, "NO_CONTENT")
+    @teams_ns.expect(create_team_request)
     def put(cls, team_id):
         """
-        Updates team's data.
+        Updates league's data.
         """
         data = request.json
-        if not data:
-            return Response(status=HTTPStatus.BAD_REQUEST)
 
-        if team_id not in teams:
-            return Response(status=HTTPStatus.NOT_FOUND)
+        team: Team = Team.query.get_or_404(team_id)
 
-        name = data["name"]
-        if name:
-            teams[team_id]["name"] = name
-            return Response(status=HTTPStatus.OK)
+        team.name = data["name"] if "name" in data else team.name
 
-        return Response(status=HTTPStatus.NO_CONTENT)
+        db.session.commit()
+
+        return "League updated"
 
     @classmethod
     def delete(cls, team_id):
         """
         Deletes the team with the specified ID.
         """
-        if team_id not in teams:
-            return Response(status=HTTPStatus.NOT_FOUND)
+        team: Team = Team.query.get_or_404(team_id)
 
-        teams.pop(team_id)
+        db.session.delete(team)
+        db.session.commit()
+
         return Response(status=HTTPStatus.CREATED)

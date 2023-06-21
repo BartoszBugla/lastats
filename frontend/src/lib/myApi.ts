@@ -548,7 +548,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/teams`,
 				method: 'POST',
 				body: payload,
-				type: ContentType.Json,
 				...params
 			}),
 
@@ -557,13 +556,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 *
 		 * @tags Teams
 		 * @name PutTeamById
-		 * @summary Updates team's data
+		 * @summary Updates league's data
 		 * @request PUT:/teams/{team_id}
 		 */
-		putTeamById: (teamId: number, params: RequestParams = {}) =>
+		putTeamById: (teamId: number, payload: CreateTeamRequest, params: RequestParams = {}) =>
 			this.request<void, void>({
 				path: `/teams/${teamId}`,
 				method: 'PUT',
+				body: payload,
 				...params
 			}),
 

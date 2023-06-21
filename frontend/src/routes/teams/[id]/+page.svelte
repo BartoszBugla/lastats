@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
+	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
-	import { createQuery } from '@tanstack/svelte-query';
+	import type { CreateTeamRequest, TeamModel } from '$lib/myApi';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { onMount } from 'svelte';
+
+	const client = useQueryClient();
 
 	let id: number = 0;
 
@@ -19,16 +23,65 @@
 
 	$: query = createQuery({
 		queryKey: ['team', id],
-		queryFn: () => api.leagues.getLeagueById(id),
+		queryFn: () => api.teams.getTeamById(id).then((res) => res.data),
 		enabled: id !== 0
 	});
+
+	$: deleteAction = createMutation({
+		mutationFn: () => api.teams.deleteTeamById(id),
+		onSuccess: () => {
+			client.invalidateQueries(['team', id]);
+			goto(routes.teams());
+		}
+	});
+
+	$: update = createMutation({
+		mutationFn: (payload: CreateTeamRequest) => api.teams.putTeamById(id, payload),
+		onSuccess: () => {
+			client.invalidateQueries(['team', id]);
+		}
+	});
+
+	let edited: CreateTeamRequest | undefined;
+
+	const setEditing = () => {
+		if (!$query.data) return;
+		if (edited) {
+			edited = undefined;
+		} else {
+			edited = {
+				name: $query.data.name
+			};
+		}
+	};
 </script>
 
 {#if id}
 	{#if $query.isLoading}
 		<span class="loading loading-spinner loading-lg mx-auto" />
 	{:else if $query.data}
-		<h1 class="mx-auto text-xl text-center my-6 font-bold">Polskie orły</h1>
+		<div class="flex flex-row items-center justify-center gap-3 my-3">
+			{#if edited}
+				<TextField label="" bind:value={edited.name} />
+				<button
+					class="btn btn-primary btn-sm"
+					on:click={() => {
+						edited && $update.mutateAsync(edited);
+						setEditing();
+					}}
+					>Zapisz
+				</button>
+			{:else}
+				<h1 class="text-xl text-center my-6 font-bold">{$query.data.name}</h1>
+				<button class="btn btn-primary btn-outline btn-sm" on:click={setEditing}>Edytuj </button>
+				<button
+					class="btn btn-error btn-outline btn-sm"
+					on:click={() => $deleteAction.mutateAsync()}
+					>Usun
+				</button>
+			{/if}
+		</div>
+
 		<div class="max-w-2xl mx-auto">
 			<div class="collapse collapse-plus bg-base-200">
 				<input type="radio" name="my-accordion-3" />

@@ -28,7 +28,7 @@
 				<tr>
 					<td>
 						<a class="link link-hover" href={routes.team(match.home_team_id)}>
-							{match.home_team?.name}
+							{match.home_team?.name || 'Unknown'}
 						</a>
 					</td>
 					{#if matchEnded(match)}
@@ -38,7 +38,7 @@
 					{/if}
 					<td>
 						<a class="link link-hover" href={routes.team(match.home_team_id)}>
-							{match.guest_team?.name}
+							{match.guest_team?.name || 'Unknown'}
 						</a>
 					</td>
 					<td>
