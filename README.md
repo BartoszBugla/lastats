@@ -1,5 +1,6 @@
 # Lastats
-Frontend znajduje się pod: 
+
+Frontend znajduje się pod:
 https://bartoszbugla.github.io/lastats
 
 ```bash
@@ -7,6 +8,7 @@ git clone https://github.com/BartoszBugla/lastats.git
 ```
 
 ## Frontend
+
 ### Spis Treści
 
 - [Przygotowanie](#przygotowanie)
@@ -17,23 +19,25 @@ git clone https://github.com/BartoszBugla/lastats.git
 - [Stos Technologiczny](#stos-technologiczny)
 - [Struktura projektu ](#struktura-projektu)
 
-
-
 ### Przygotowanie
 
 Do poprawnego włączenia projektu niezbędne jest zainstalowanie Node na urządzeniu - [Node](https://nodejs.org/en)
 
 Do instalacji wszystkich zależności użyj komendy
+
 ```bash
 npm run install
 ```
 
 Przed rozpoczęciem nie zbędne jest włączenie backend'u ze względu na generowanie typów bezpośrednio z API, poprzez komendę
+
 ```bash
 npm run swagger
 ```
+
 Wykorzystana jest bilbioteka `swagger-typescript-api`
-### Serwer lokalny 
+
+### Serwer lokalny
 
 ```bash
 npm run dev
@@ -55,12 +59,11 @@ npm run preview
 
 ### Stos Technologiczny
 
-
 - `Typescript`
 - `Tanstack Query` - biblioteka do pobierania danych
-- `Svelte` - główny framework używany w projekcie 
+- `Svelte` - główny framework używany w projekcie
 - `SvelteKit` - metaframework i serwer
-- `Tailwiwnd CSS`  - narzędzie do stylowania, 
+- `Tailwiwnd CSS` - narzędzie do stylowania,
 - `Daisy Ui` - zestaw gotowych styli dla Tailwind CSS
 - `Zod` - biblioteka do walidacji danych
 
@@ -80,7 +83,7 @@ https://daisyui.com/
 
 https://github.com/colinhacks/zod
 
-### Struktura projektu 
+### Struktura projektu
 
 Kod źródłowy znajduje się w pliku `frontend/src`
 
@@ -103,6 +106,7 @@ Plik `requirements.txt` jest plikiem tekstowym, który zawiera listę wszystkich
 - `flask_restx`: Rozszerzenie Flaska, które umożliwia tworzenie interfejsu API REST.
 - `black`: Narzędzie do automatycznego formatowania kodu źródłowego w Pythonie.
 - `python-dateutil`: Biblioteka do obsługi dat i czasu w Pythonie.
+
 ### Uruchomienie projektu
 
 Aby uruchomić ten projekt, wykonaj następujące kroki:
@@ -130,15 +134,13 @@ pip install -r requirements.txt
 4. Uruchom aplikację.
 
 ```bash
-flask run -p 8000 --debug
+flask run -p 8080 --debug
 ```
 
-6. Aplikacja będzie dostępna pod adresem `http://localhost8000`
-
+6. Aplikacja będzie dostępna pod adresem `http://localhost8080`
 
 @TODO
+
 ```console
 docker compose up
 ```
-
-
