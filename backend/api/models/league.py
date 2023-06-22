@@ -19,3 +19,4 @@ class League(BaseModel):
 
     def __repr__(self):
         return f"<League {self.name}>"
+    

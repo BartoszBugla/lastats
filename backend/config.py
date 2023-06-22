@@ -3,7 +3,7 @@ import os
 
 class BaseConfig(object):
     HOST = "0.0.0.0"
-    PORT = 8000
+    PORT = 8080
     DEBUG = True
 
     def __init__(self):
