@@ -72,7 +72,7 @@ match_model = base_ns.inherit(
     },
 )
 
-player_model = base_model.inherit(
+player_model = base_ns.inherit(
     "PlayerModel",
     base_model,
     {
