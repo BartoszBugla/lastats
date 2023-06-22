@@ -79,5 +79,5 @@ player_model = base_model.inherit(
         "name": fields.String(required=True, description="Player name"),
         "position": fields.String(required=True, description="Player position"),
         "team_id": fields.Integer(required=True, description="Player team ID"),
-    }
+    },
 )

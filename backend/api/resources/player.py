@@ -44,8 +44,8 @@ class Players(Resource):
         db.session.commit()
 
         return Response(status=HTTPStatus.CREATED)
-    
-    
+
+
 @players_ns.route("players/<int:player_id>")
 class TeamById(Resource):
     @classmethod
