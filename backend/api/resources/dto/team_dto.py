@@ -15,7 +15,3 @@ create_team_request = teams_ns.model(
         "league_id": fields.Integer(required=False, description="League ID"),
     },
 )
-
-# from .league import league_model
-
-# team_model["league"] = fields.Nested(league_model)
