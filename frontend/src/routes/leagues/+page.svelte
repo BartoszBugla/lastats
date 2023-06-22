@@ -4,7 +4,6 @@
 	import { routes } from '$lib/config/routes';
 	import type { CreateLeagueRequest, LeagueModel } from '$lib/myApi';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import { bind } from 'svelte/internal';
 
 	let searchValue = '';
 

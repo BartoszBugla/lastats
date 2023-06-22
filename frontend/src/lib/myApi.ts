@@ -393,6 +393,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Leagues
+		 * @name DeleteLeagueById
+		 * @summary Deletes the league with the specified ID
+		 * @request DELETE:/leagues/{league_id}
+		 */
+		deleteLeagueById: (leagueId: number, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/leagues/${leagueId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Leagues
 		 * @name PutLeagueById
 		 * @summary Updates league's data
 		 * @request PUT:/leagues/{league_id}
@@ -419,21 +434,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/leagues/${leagueId}`,
 				method: 'GET',
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Leagues
-		 * @name DeleteLeagueById
-		 * @summary Deletes the league with the specified ID
-		 * @request DELETE:/leagues/{league_id}
-		 */
-		deleteLeagueById: (leagueId: number, params: RequestParams = {}) =>
-			this.request<void, void>({
-				path: `/leagues/${leagueId}`,
-				method: 'DELETE',
 				...params
 			}),
 
@@ -555,6 +555,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Teams
+		 * @name DeleteTeamById
+		 * @summary Deletes the team with the specified ID
+		 * @request DELETE:/teams/{team_id}
+		 */
+		deleteTeamById: (teamId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/teams/${teamId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Teams
 		 * @name PutTeamById
 		 * @summary Updates league's data
 		 * @request PUT:/teams/{team_id}
@@ -580,21 +595,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/teams/${teamId}`,
 				method: 'GET',
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Teams
-		 * @name DeleteTeamById
-		 * @summary Deletes the team with the specified ID
-		 * @request DELETE:/teams/{team_id}
-		 */
-		deleteTeamById: (teamId: number, params: RequestParams = {}) =>
-			this.request<void, any>({
-				path: `/teams/${teamId}`,
-				method: 'DELETE',
 				...params
 			})
 	};

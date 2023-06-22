@@ -39,7 +39,7 @@ Wykorzystana jest bilbioteka `swagger-typescript-api`
 npm run dev
 ```
 
-Następnie wejdź na stronę [http://localhost:8080](http://localhost:8080) w przeglądarce.
+Następnie wejdź na stronę [http://localhost:5173](http://localhost:5173) w przeglądarce.
 
 ### Budowa projektu:
 
