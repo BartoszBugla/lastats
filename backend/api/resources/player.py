@@ -73,6 +73,8 @@ class TeamById(Resource):
         player: Player = Player.query.get_or_404(player_id)
 
         player.name = data["name"] if "name" in data else player.name
+        player.position = data["position"] if "position" in data else player.position
+        player.team_id = data["team_id"] if "team_id" in data else player.team_id
 
         db.session.commit()
 
