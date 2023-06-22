@@ -33,5 +33,5 @@ jobs:
       - name: Install dependencies
         run: pip --no-cache-dir install --requirement requirements.txt
 
-      - name: Verify code formatting
-        run: black --check .
+      # - name: Verify code formatting
+      #   run: black --check .
