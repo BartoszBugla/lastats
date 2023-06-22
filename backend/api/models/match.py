@@ -25,8 +25,8 @@ class Match(BaseModel):
         home_team_id,
         guest_team_id,
         league_id,
-        guest_team_goals,
-        home_team_goals,
+        guest_team_goals=None,
+        home_team_goals=None,
     ):
         self.time = time
         self.location = location

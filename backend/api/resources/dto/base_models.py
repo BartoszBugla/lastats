@@ -12,6 +12,17 @@ base_model: Model = base_ns.model(
     },
 )
 
+player_model = base_ns.inherit(
+    "PlayerModel",
+    base_model,
+    {
+        "name": fields.String(required=True, description="Player name"),
+        "position": fields.String(required=True, description="Player position"),
+        "team_id": fields.Integer(required=True, description="Player team ID"),
+        "number": fields.Integer(required=False, description="Player number"),
+    },
+)
+
 
 team_model = base_ns.inherit(
     "TeamModel",
@@ -23,6 +34,9 @@ team_model = base_ns.inherit(
         "draws": fields.Integer(required=True, description="Number of draws"),
         "losses": fields.Integer(required=True, description="Number of losses"),
         "league_points": fields.Integer(required=True, description="League points"),
+        "players": fields.List(
+            fields.Nested(player_model), required=True, description="List of players"
+        ),
     },
 )
 
@@ -69,15 +83,5 @@ match_model = base_ns.inherit(
         "match_events": fields.List(fields.Nested(match_event_model)),
         "location": fields.String(required=True, description="Match location"),
         "time": fields.DateTime(required=True, description="Match event time"),
-    },
-)
-
-player_model = base_ns.inherit(
-    "PlayerModel",
-    base_model,
-    {
-        "name": fields.String(required=True, description="Player name"),
-        "position": fields.String(required=True, description="Player position"),
-        "team_id": fields.Integer(required=True, description="Player team ID"),
     },
 )

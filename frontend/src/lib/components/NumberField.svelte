@@ -3,7 +3,7 @@
 
 	interface $$restProps extends HTMLAttributes<HTMLInputElement> {}
 
-	export let label: string;
+	export let label: string | number;
 </script>
 
 <div class="form-control w-full max-w-xs">

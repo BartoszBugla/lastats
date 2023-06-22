@@ -30,10 +30,6 @@
 	let schema = z.object({
 		[FormFields.HomeTeamId]: z.number({ coerce: true, invalid_type_error: 'Id musi być liczbą' }),
 		[FormFields.GuestTeamId]: z.number({ coerce: true, invalid_type_error: 'Id musi być liczbą' }),
-		[FormFields.HomeTeamGoals]: z.number({ coerce: true }).min(0, 'Gole muszą być liczbą dodatnią'),
-		[FormFields.GuestTeamGoals]: z
-			.number({ coerce: true })
-			.min(0, 'Gole muszą być liczbą dodatnią'),
 		[FormFields.Location]: z.string().min(1, 'Lokalizacja jest wymagana'),
 		[FormFields.Time]: z.date({ coerce: true })
 	});
@@ -84,8 +80,8 @@
 
 		{#if isAfter(new Date(), new Date(dateValue))}
 			<div class="flex flex-row gap-4">
-				<NumberField name={FormFields.HomeTeamGoals} defaultValue="0" label="Gole Gosp." />
-				<NumberField name={FormFields.GuestTeamGoals} defaultValue="0" label="Gole Gośći" />
+				<NumberField min="0" name={FormFields.HomeTeamGoals} defaultValue="0" label="Gole Gosp." />
+				<NumberField min="0" name={FormFields.GuestTeamGoals} defaultValue="0" label="Gole Gośći" />
 			</div>
 		{/if}
 

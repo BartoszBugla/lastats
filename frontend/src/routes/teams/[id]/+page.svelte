@@ -6,6 +6,7 @@
 	import type { CreateTeamRequest, TeamModel } from '$lib/myApi';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { onMount } from 'svelte';
+	import { each } from 'svelte/internal';
 
 	const client = useQueryClient();
 
@@ -54,6 +55,14 @@
 			};
 		}
 	};
+
+	const translatePositon = (pos: string) => {
+		if (pos === 'PlayerPosition.GOALKEEPER') return 'Bramkarz';
+		if (pos === 'PlayerPosition.DEFENDER') return 'Obronca';
+		if (pos === 'PlayerPosition.MIDFIELDER') return 'Pomocnik';
+		if (pos === 'PlayerPosition.FORWARD') return 'Napastnik';
+		return 'Brak';
+	};
 </script>
 
 {#if id}
@@ -90,60 +99,19 @@
 					<table class="table table-sm w-full p-2 mb-6">
 						<thead>
 							<tr class="border-b border-gray-600">
-								<th>Number</th>
-								<th>Full Name</th>
-								<th>Position</th>
-								<th>Goals</th>
+								<th>Numer na koszulce</th>
+								<th>Zawodnik</th>
+								<th>Pozycja</th>
 							</tr>
 						</thead>
 						<tbody>
-							<!-- lista graczy  -->
-							<tr>
-								<td>16</td>
-								<td>Bartosz Bugla</td>
-								<td>GK</td>
-								<td>5</td>
-							</tr>
-							<tr>
-								<td>17</td>
-								<td>Bartłomiej Pacia</td>
-								<td>LD</td>
-								<td>5</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<div class="collapse collapse-plus bg-base-200">
-				<input type="radio" name="my-accordion-3" />
-				<div class="collapse-title text-xl font-medium">Mecze w sezonie</div>
-				<div class="collapse-content">
-					<table class="table table-sm w-full p-2 mb-6">
-						<thead>
-							<tr class="border-b border-gray-600">
-								<th>Date</th>
-								<th>Host</th>
-								<th />
-								<th>Guest</th>
-								<th>Result</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- lista meczy  -->
-							<tr class="">
-								<td>06.06.2006</td>
-								<td>ta Druzyna</td>
-								<td>vs</td>
-								<td>inna druzyna</td>
-								<td>3:5</td>
-							</tr>
-							<tr>
-								<td>06.06.2006</td>
-								<td>ta Druzyna</td>
-								<td>vs</td>
-								<td>inna druzyna</td>
-								<td>3:5</td>
-							</tr>
+							{#each $query.data.players as player}
+								<tr>
+									<td>{player.number}</td>
+									<td>{player.name}</td>
+									<td>{translatePositon(player.position)}</td>
+								</tr>
+							{/each}
 						</tbody>
 					</table>
 				</div>

@@ -6,7 +6,7 @@
 	import SelectTeamsDialog from '$lib/components/SelectTeamsDialog.svelte';
 	import TextField from '$lib/components/TextField.svelte';
 	import { routes } from '$lib/config/routes';
-	import type { CreateLeagueRequest } from '$lib/myApi';
+	import type { CreateLeagueRequest, CreateMatchRequest } from '$lib/myApi';
 	import { useDialog } from '$lib/utils/use-dialog';
 	import { useDynamicRoute } from '$lib/utils/use-dynamic-route';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
@@ -62,9 +62,23 @@
 		mutationFn: () => api.leagues.deleteLeagueById($id),
 		onSuccess: () => {
 			client.invalidateQueries(['leagues', $id]);
-			goto(routes.teams());
+			goto(routes.home());
 		}
 	});
+
+	$: addMatch = createMutation({
+		mutationFn: (payload: CreateMatchRequest) => api.matches.postMatches(payload),
+		onSuccess: () => {
+			client.invalidateQueries(['league-matches', $id]);
+		}
+	});
+
+	const addMatchSubmit = (values: CreateMatchRequest) => {
+		$addMatch.mutate({
+			...values,
+			league_id: $id
+		});
+	};
 
 	let edited: CreateLeagueRequest | undefined;
 
@@ -105,6 +119,9 @@
 		<input type="radio" name="my-accordion-3" />
 		<div class="collapse-title text-xl font-medium">Tabela Ligi</div>
 		<div class="collapse-content">
+			<button on:click={openDialog} class="btn btn-outline btn-primary btn-sm mx-auto float-right"
+				>Dodaj zespół</button
+			>
 			{#if $query.isLoading}
 				<span class="loading loading-spinner loading-lg mx-auto" />
 			{:else if $query.data}
@@ -140,24 +157,21 @@
 					</tbody>
 				</table>
 			{/if}
-			<button on:click={openDialog} class="btn btn-outline btn-primary btn-sm mx-auto self-center"
-				>Dodaj zespół</button
-			>
 		</div>
 	</div>
 	<div class="collapse collapse-plus bg-base-200">
 		<input type="radio" name="my-accordion-3" />
 		<div class="collapse-title text-xl font-medium">Mecze w lidze</div>
 		<div class="collapse-content">
-			<MatchesTable data={$matchesQuery.data} />
-			<button on:click={openMatchesDialog} class="btn btn-primary btn-outline btn-sm"
+			<button on:click={openMatchesDialog} class="btn btn-primary btn-outline btn-sm float-right"
 				>Dodaj mecz</button
 			>
+			<MatchesTable data={$matchesQuery.data} />
 		</div>
 	</div>
 
 	<AddMatchDialog
-		onSubmit={() => null}
+		onSubmit={addMatchSubmit}
 		onCancel={() => null}
 		closeDialog={closeMatchesDialog}
 		isOpened={$isMatchesDialogOpen}

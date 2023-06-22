@@ -37,6 +37,8 @@ export type TeamModel = BaseModel & {
 	losses: number;
 	/** League points */
 	league_points: number;
+	/** List of players */
+	players: PlayerModel[];
 };
 
 export interface BaseModel {
@@ -53,6 +55,17 @@ export interface BaseModel {
 	 */
 	created_at: string;
 }
+
+export type PlayerModel = BaseModel & {
+	/** Player name */
+	name: string;
+	/** Player position */
+	position: string;
+	/** Player team ID */
+	team_id: number;
+	/** Player number */
+	number?: number;
+};
 
 export interface CreateLeagueRequest {
 	/** League name */
@@ -124,6 +137,35 @@ export type MatchEventModel = BaseModel & {
 	/** Match event type */
 	type: string;
 };
+
+export interface CreateMatchRequest {
+	/** Time when the match started */
+	time: string;
+	/** Place where the match took place */
+	location?: string;
+	/** Team ID of the home team */
+	home_team_id: number;
+	/** Team ID of the guest team */
+	guest_team_id: number;
+	/** League ID */
+	league_id?: number;
+	/** Number of goals scored by the guest team */
+	guest_team_goals?: number;
+	/** Number of goals scored by the home team */
+	home_team_goals?: number;
+}
+
+export interface CreatePlayerRequest {
+	/** Player name */
+	name: string;
+	/**
+	 * Player position
+	 * @example "GOALKEEPER"
+	 */
+	position: 'GOALKEEPER' | 'DEFENDER' | 'MIDFIELDER' | 'FORWARD';
+	/** Player's team ID */
+	team_id: number;
+}
 
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, 'body' | 'bodyUsed'>;
@@ -393,6 +435,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Leagues
+		 * @name GetLeagueById
+		 * @summary Returns the league with the specified ID
+		 * @request GET:/leagues/{league_id}
+		 */
+		getLeagueById: (leagueId: number, params: RequestParams = {}) =>
+			this.request<LeagueModel, void>({
+				path: `/leagues/${leagueId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Leagues
 		 * @name DeleteLeagueById
 		 * @summary Deletes the league with the specified ID
 		 * @request DELETE:/leagues/{league_id}
@@ -417,22 +475,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/leagues/${leagueId}`,
 				method: 'PUT',
 				body: payload,
-				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Leagues
-		 * @name GetLeagueById
-		 * @summary Returns the league with the specified ID
-		 * @request GET:/leagues/{league_id}
-		 */
-		getLeagueById: (leagueId: number, params: RequestParams = {}) =>
-			this.request<LeagueModel, void>({
-				path: `/leagues/${leagueId}`,
-				method: 'GET',
 				format: 'json',
 				...params
 			}),
@@ -516,6 +558,149 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				query: query,
 				format: 'json',
 				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Matches
+		 * @name PostMatches
+		 * @summary Creates a new player
+		 * @request POST:/matches
+		 */
+		postMatches: (payload: CreateMatchRequest, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/matches`,
+				method: 'POST',
+				body: payload,
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Matches
+		 * @name GetMatchById
+		 * @summary Returns the match with the specified ID
+		 * @request GET:/matches/{match_id}
+		 */
+		getMatchById: (matchId: number, params: RequestParams = {}) =>
+			this.request<MatchModel, void>({
+				path: `/matches/${matchId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Matches
+		 * @name DeleteMatchById
+		 * @summary Deletes the match with the specified ID
+		 * @request DELETE:/matches/{match_id}
+		 */
+		deleteMatchById: (matchId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/matches/${matchId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Matches
+		 * @name PutMatchById
+		 * @summary Updates match data
+		 * @request PUT:/matches/{match_id}
+		 */
+		putMatchById: (matchId: number, payload: CreateMatchRequest, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/matches/${matchId}`,
+				method: 'PUT',
+				body: payload,
+				...params
+			})
+	};
+	players = {
+		/**
+		 * No description
+		 *
+		 * @tags Players
+		 * @name GetPlayers
+		 * @summary Returns list of all the players whose names contain the given query
+		 * @request GET:/players
+		 */
+		getPlayers: (params: RequestParams = {}) =>
+			this.request<PlayerModel[], any>({
+				path: `/players`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Players
+		 * @name PostPlayers
+		 * @summary Creates a new player
+		 * @request POST:/players
+		 */
+		postPlayers: (payload: CreatePlayerRequest, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/players`,
+				method: 'POST',
+				body: payload,
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Players
+		 * @name GetTeamById
+		 * @summary Returns the player with the specified ID
+		 * @request GET:/players/{player_id}
+		 */
+		getTeamById: (playerId: number, params: RequestParams = {}) =>
+			this.request<PlayerModel, void>({
+				path: `/players/${playerId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Players
+		 * @name DeleteTeamById
+		 * @summary Deletes the player with the specified ID
+		 * @request DELETE:/players/{player_id}
+		 */
+		deleteTeamById: (playerId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/players/${playerId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Players
+		 * @name PutTeamById
+		 * @summary Updates player's data
+		 * @request PUT:/players/{player_id}
+		 */
+		putTeamById: (playerId: number, payload: CreatePlayerRequest, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/players/${playerId}`,
+				method: 'PUT',
+				body: payload,
+				...params
 			})
 	};
 	teams = {
@@ -555,6 +740,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Teams
+		 * @name GetTeamById
+		 * @summary Returns the team with the specified ID
+		 * @request GET:/teams/{team_id}
+		 */
+		getTeamById: (teamId: number, params: RequestParams = {}) =>
+			this.request<TeamModel, void>({
+				path: `/teams/${teamId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Teams
 		 * @name DeleteTeamById
 		 * @summary Deletes the team with the specified ID
 		 * @request DELETE:/teams/{team_id}
@@ -579,22 +780,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/teams/${teamId}`,
 				method: 'PUT',
 				body: payload,
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Teams
-		 * @name GetTeamById
-		 * @summary Returns the team with the specified ID
-		 * @request GET:/teams/{team_id}
-		 */
-		getTeamById: (teamId: number, params: RequestParams = {}) =>
-			this.request<TeamModel, void>({
-				path: `/teams/${teamId}`,
-				method: 'GET',
-				format: 'json',
 				...params
 			})
 	};

@@ -12,35 +12,46 @@ from api.models.match_event import MatchEvent, MatchEventType
 def seed():
     seed_leagues()
     seed_teams()
-    seed_players()
+
     seed_matches()
 
     db.session.commit()
 
 
 def seed_leagues():
+    best_team = Team("Politechnika Śląska", 5, 5, 0, 2)
+    best_team.players = [
+        Player("Bartosz Bugla", 16, PlayerPosition.DEFENDER, 1),
+        Player("Bartłomiej Pacia", 15, PlayerPosition.MIDFIELDER, 1),
+        Player("Kamil Grabowski", 14, PlayerPosition.FORWARD, 1),
+        Player("Michał Bober", 13, PlayerPosition.GOALKEEPER, 1),
+    ]
+
     league = League(
         "Ekstraklasa",
     )
+
     league.teams = [
-        Team("Legia Warszawa"),
-        Team("Piast Gliwice"),
-        Team("Pogoń Szczecin"),
-        Team("Lech Poznań"),
-        Team("Podbiskdizie Bielska-Biała"),
-        Team("Wisła Kraków"),
-        Team("Śląsk Wrocław"),
-        Team("Ruch Chorzów"),
+        Team("Legia Warszawa", 5, 5, 0, 2),
+        Team("Piast Gliwice", 5, 2, 3, 4),
+        Team(
+            "Pogoń Szczecin",
+            2,
+            3,
+            2,
+            1,
+        ),
+        Team("Lech Poznań", 5, 2, 3, 4),
+        Team("Podbiskdizie Bielska-Biała", 3, 2, 6, 4),
+        Team("Wisła Kraków", 0, 5, 3, 4),
+        Team("Śląsk Wrocław", 5, 5, 3, 4),
+        Team("Ruch Chorzów", 3, 1, 6, 3),
+        best_team,
     ]
 
     league2 = League("Testowa liga 2")
     db.session.add(league)
     db.session.add(league2)
-
-
-def seed_players():
-    player = Player(name="Testowy gracz", position=PlayerPosition.DEFENDER, team_id=1)
-    db.session.add(player)
 
 
 def seed_teams():

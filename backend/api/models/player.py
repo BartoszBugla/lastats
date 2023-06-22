@@ -17,12 +17,14 @@ class Player(BaseModel):
 
     name = db.Column(db.String(100), nullable=False)
     position = db.Column(db.Enum(PlayerPosition))
+    number = db.Column(db.Integer)
     team_id = db.Column(db.Integer, db.ForeignKey("teams.id"))
 
-    def __init__(self, name, position=None, team_id=None):
+    def __init__(self, name, number=None, position=None, team_id=None):
         self.name = name
         self.position = position
         self.team_id = team_id
+        self.number = number
 
     def __repr__(self):
         return f"<Player {self.name}>"

@@ -14,29 +14,19 @@
 	const client = useQueryClient();
 
 	let name: string;
-	let wins: string = '0';
-	let draws: string = '0';
-	let losses: string = '0';
+	let wins: number = 0;
+	let draws: number = 0;
+	let losses: number = 0;
 
 	let error = '';
 
 	let schema = z.object({
-		name: z.string().min(1, 'Name is Required'),
-		wins: z
-			.number({ coerce: true, invalid_type_error: 'Wins must be a number' })
-			.min(0, 'Wins must be a positive number'),
-
-		draws: z
-			.number({ coerce: true, invalid_type_error: 'Draws must be a number' })
-			.min(0, 'Draws must be a positive number'),
-		losses: z
-			.number({ coerce: true, invalid_type_error: 'Losses must be a number' })
-			.min(0, 'Losses must be a positive number')
+		name: z.string().min(1, 'Name is Required')
 	});
 
 	const validateSchema = (schema: z.AnyZodObject, values: unknown) => {
 		try {
-			return [schema.parse(values), undefined];
+			return [, undefined];
 		} catch (err) {
 			if (err instanceof z.ZodError) {
 				console.log(err.errors);
@@ -70,17 +60,16 @@
 			losses
 		};
 
-		const [parsed, isError] = validateSchema(schema, formValues) as [
-			z.infer<typeof schema>,
-			string
-		];
+		try {
+			const parsedData = schema.parse(formValues);
 
-		if (isError) {
-			error = isError;
-			return;
+			$addTeam.mutate(parsedData);
+			error = '';
+		} catch (e: unknown) {
+			if (e instanceof z.ZodError) {
+				error = e.errors[0].message;
+			}
 		}
-		error = '';
-		$addTeam.mutate(parsed);
 	};
 </script>
 
@@ -89,9 +78,9 @@
 	<p class="text-sm text-center my-2">
 		Pola poniej muszą byc liczbowe w przypadku nie podania wartośći automatycznie jest 0
 	</p>
-	<NumberField bind:value={wins} label="Wins" />
-	<NumberField bind:value={draws} label="Draws" />
-	<NumberField bind:value={losses} label="Losses" />
+	<NumberField min="0" bind:value={wins} label="Wins" />
+	<NumberField min="0" bind:value={draws} label="Draws" />
+	<NumberField min="0" bind:value={losses} label="Losses" />
 	{#if error}
 		<p class="text-red-500">{error}</p>
 	{/if}

@@ -11,7 +11,7 @@
 </script>
 
 {#if data}
-	{#each data as match}
+	{#each data.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()) as match}
 		<table class="table w-full p-2 mb-6 max-w-[900px] mx-auto mt-10 text-center">
 			<!-- head -->
 			<thead>
