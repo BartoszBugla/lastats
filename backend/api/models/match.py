@@ -18,12 +18,23 @@ class Match(BaseModel):
     home_team_goals = db.Column(db.Integer, default=0)
     match_events = db.relationship("MatchEvent", backref="matches", lazy=True)
 
-    def __init__(self, time, location, home_team_id, guest_team_id, league_id):
+    def __init__(
+        self,
+        time,
+        location,
+        home_team_id,
+        guest_team_id,
+        league_id,
+        guest_team_goals,
+        home_team_goals,
+    ):
         self.time = time
         self.location = location
         self.home_team_id = home_team_id
         self.guest_team_id = guest_team_id
         self.league_id = league_id
+        self.guest_team_goals = guest_team_goals
+        self.home_team_goals = home_team_goals
 
     def __repr__(self):
         return f"<Player {self.name}>"

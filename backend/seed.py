@@ -19,7 +19,20 @@ def seed():
 
 
 def seed_leagues():
-    league = League("Testowa liga")
+    league = League(
+        "Ekstraklasa",
+    )
+    league.teams = [
+        Team("Legia Warszawa"),
+        Team("Piast Gliwice"),
+        Team("Pogoń Szczecin"),
+        Team("Lech Poznań"),
+        Team("Podbiskdizie Bielska-Biała"),
+        Team("Wisła Kraków"),
+        Team("Śląsk Wrocław"),
+        Team("Ruch Chorzów"),
+    ]
+
     league2 = League("Testowa liga 2")
     db.session.add(league)
     db.session.add(league2)
@@ -49,6 +62,8 @@ def seed_matches():
         home_team_id=1,
         guest_team_id=2,
         league_id=1,
+        guest_team_goals=1,
+        home_team_goals=2,
     )
 
     match_item2 = Match(
@@ -57,6 +72,8 @@ def seed_matches():
         home_team_id=4,
         guest_team_id=3,
         league_id=1,
+        guest_team_goals=3,
+        home_team_goals=2,
     )
 
     match_item.match_events = [

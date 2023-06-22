@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import api from '$lib/api';
+	import AddMatchDialog from '$lib/components/AddMatchDialog.svelte';
 	import MatchesTable from '$lib/components/MatchesTable.svelte';
 	import SelectTeamsDialog from '$lib/components/SelectTeamsDialog.svelte';
 	import TextField from '$lib/components/TextField.svelte';
@@ -23,6 +24,7 @@
 	});
 
 	const [isOpenDialog, openDialog, closeDialog] = useDialog();
+	const [isMatchesDialogOpen, openMatchesDialog, closeMatchesDialog] = useDialog();
 
 	$: query = createQuery({
 		queryKey: ['leagues', $id],
@@ -67,7 +69,6 @@
 	let edited: CreateLeagueRequest | undefined;
 
 	const setEditing = () => {
-		console.log(edited);
 		if (!$query.data) return;
 		if (edited) {
 			edited = undefined;
@@ -138,10 +139,10 @@
 						{/each}
 					</tbody>
 				</table>
-				<button on:click={openDialog} class="btn btn-outline btn-primary btn-sm mx-auto"
-					>Dodaj zespół</button
-				>
 			{/if}
+			<button on:click={openDialog} class="btn btn-outline btn-primary btn-sm mx-auto self-center"
+				>Dodaj zespół</button
+			>
 		</div>
 	</div>
 	<div class="collapse collapse-plus bg-base-200">
@@ -149,9 +150,19 @@
 		<div class="collapse-title text-xl font-medium">Mecze w lidze</div>
 		<div class="collapse-content">
 			<MatchesTable data={$matchesQuery.data} />
+			<button on:click={openMatchesDialog} class="btn btn-primary btn-outline btn-sm"
+				>Dodaj mecz</button
+			>
 		</div>
 	</div>
 
+	<AddMatchDialog
+		onSubmit={() => null}
+		onCancel={() => null}
+		closeDialog={closeMatchesDialog}
+		isOpened={$isMatchesDialogOpen}
+		bind:data={$query.data}
+	/>
 	<SelectTeamsDialog
 		leagueId={$id}
 		onCancel={cleanSelected}
