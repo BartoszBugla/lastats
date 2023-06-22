@@ -5,16 +5,16 @@ const dev = process.argv.includes('dev');
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  kit: {
-    adapter: adapter(),
-    prerender:{
-      entries: ['/leagues/*', '/teams/*'],
-    },
-    paths: {
-        base: dev ? '/base' : process.env.BASE_PATH,
-    }
-},
-  preprocess: vitePreprocess()
+	kit: {
+		adapter: adapter(),
+		prerender: {
+			entries: ['/leagues/*', '/teams/*']
+		},
+		paths: {
+			base: dev ? '/base' : process.env.BASE_PATH
+		}
+	},
+	preprocess: vitePreprocess()
 };
 
 export default config;
