@@ -78,7 +78,7 @@ class TeamById(Resource):
 
         db.session.commit()
 
-        return "League updated"
+        return "Team updated"
 
     @classmethod
     def delete(cls, team_id):

@@ -1,5 +1,5 @@
 from flask_restx import Namespace, fields
-from models.player import PlayerPosition
+from ...models.player import PlayerPosition
 
 
 players_ns = Namespace("Players", description="Operations related to players")

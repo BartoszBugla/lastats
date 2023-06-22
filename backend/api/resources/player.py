@@ -38,9 +38,54 @@ class Players(Resource):
         new_player = Player(
             name=data["name"],
             position=data["position"],
-            team_id=data["team_id"] if "team_id" in data else None,
+            team_id=data["player_id"] if "player_id" in data else None,
         )
         db.session.add(new_player)
+        db.session.commit()
+
+        return Response(status=HTTPStatus.CREATED)
+    
+    
+@players_ns.route("players/<int:player_id>")
+class TeamById(Resource):
+    @classmethod
+    @players_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS, player_model)
+    @players_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
+    @players_ns.marshal_with(player_model)
+    def get(cls, player_id):
+        """
+        Returns the player with the specified ID.
+        """
+        return Player.query.get(player_id)
+
+    @classmethod
+    @players_ns.response(HTTPStatus.OK, MESSAGE_SUCCESS)
+    @players_ns.response(HTTPStatus.BAD_REQUEST, "BAD REQUEST")
+    @players_ns.response(HTTPStatus.NOT_FOUND, MESSAGE_NOT_FOUND)
+    @players_ns.response(HTTPStatus.NO_CONTENT, "NO_CONTENT")
+    @players_ns.expect(create_player_request)
+    def put(cls, player_id):
+        """
+        Updates player's data.
+        """
+        data = request.json
+
+        player: Player = Player.query.get_or_404(player_id)
+
+        player.name = data["name"] if "name" in data else player.name
+
+        db.session.commit()
+
+        return "Player updated"
+
+    @classmethod
+    def delete(cls, player_id):
+        """
+        Deletes the player with the specified ID.
+        """
+        player: Player = Player.query.get_or_404(player_id)
+
+        db.session.delete(player)
         db.session.commit()
 
         return Response(status=HTTPStatus.CREATED)
