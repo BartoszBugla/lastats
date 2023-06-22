@@ -23,11 +23,16 @@ git clone https://github.com/BartoszBugla/lastats.git
 
 Do poprawnego włączenia projektu niezbędne jest zainstalowanie Node na urządzeniu - [Node](https://nodejs.org/en)
 
+Do instalacji wszystkich zależności użyj komendy
+```bash
+npm run install
+```
+
 Przed rozpoczęciem nie zbędne jest włączenie backend'u ze względu na generowanie typów bezpośrednio z API, poprzez komendę
 ```bash
 npm run swagger
 ```
-
+Wykorzystana jest bilbioteka `swagger-typescript-api`
 ### Serwer lokalny 
 
 ```bash
