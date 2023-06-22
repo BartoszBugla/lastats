@@ -1,6 +1,6 @@
 # Lastats
 
-Frontend znajduje się pod: 
+Frontend znajduje się pod:  
 https://bartoszbugla.github.io/lastats
 
 ```bash
