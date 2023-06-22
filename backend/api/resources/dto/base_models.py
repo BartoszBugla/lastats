@@ -71,3 +71,13 @@ match_model = base_ns.inherit(
         "time": fields.DateTime(required=True, description="Match event time"),
     },
 )
+
+player_model = base_model.inherit(
+    "PlayerModel",
+    base_model,
+    {
+        "name": fields.String(required=True, description="Player name"),
+        "position": fields.String(required=True, description="Player position"),
+        "team_id": fields.Integer(required=True, description="Player team ID"),
+    }
+)
