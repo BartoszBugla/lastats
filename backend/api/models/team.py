@@ -4,7 +4,6 @@ from api.extensions import db
 
 from .base import BaseModel
 
-
 class Team(BaseModel):
     __tablename__ = "teams"
 
