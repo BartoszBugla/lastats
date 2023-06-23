@@ -10,9 +10,9 @@
 	});
 </script>
 
-<h1 class="text-center text-2xl mt-10 font-bold">Welcome to lastats</h1>
-<h2 class="text-center text-lg mt-2">The best page with lacrosse statistics</h2>
-<h3 class="text-center text-md mt-4">See all latest Matches</h3>
+<h1 class="text-center text-2xl mt-10 font-bold">Witaj w LaStats</h1>
+<h2 class="text-center text-lg mt-2">Najlepsza strona z drużynami oraz meczami</h2>
+
 {#if $query.isLoading}
 	<span class="loading loading-spinner loading-lg mx-auto" />
 {:else if $query.data}
