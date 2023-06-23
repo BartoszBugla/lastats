@@ -21,7 +21,6 @@
 					<summary>Dodaj</summary>
 					<ul>
 						<li><a href={routes.addLeague()}>Ligę</a></li>
-						<li><a href="{base}/">Zawodnika</a></li>
 						<li><button on:click={openDialog} class="link">Drużynę</button></li>
 					</ul>
 				</details>
