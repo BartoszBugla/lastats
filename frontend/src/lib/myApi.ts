@@ -435,6 +435,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Leagues
+		 * @name DeleteLeagueById
+		 * @summary Deletes the league with the specified ID
+		 * @request DELETE:/leagues/{league_id}
+		 */
+		deleteLeagueById: (leagueId: number, params: RequestParams = {}) =>
+			this.request<void, void>({
+				path: `/leagues/${leagueId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Leagues
 		 * @name GetLeagueById
 		 * @summary Returns the league with the specified ID
 		 * @request GET:/leagues/{league_id}
@@ -444,21 +459,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/leagues/${leagueId}`,
 				method: 'GET',
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Leagues
-		 * @name DeleteLeagueById
-		 * @summary Deletes the league with the specified ID
-		 * @request DELETE:/leagues/{league_id}
-		 */
-		deleteLeagueById: (leagueId: number, params: RequestParams = {}) =>
-			this.request<void, void>({
-				path: `/leagues/${leagueId}`,
-				method: 'DELETE',
 				...params
 			}),
 
@@ -580,6 +580,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Matches
+		 * @name DeleteMatchById
+		 * @summary Deletes the match with the specified ID
+		 * @request DELETE:/matches/{match_id}
+		 */
+		deleteMatchById: (matchId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/matches/${matchId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Matches
 		 * @name GetMatchById
 		 * @summary Returns the match with the specified ID
 		 * @request GET:/matches/{match_id}
@@ -589,21 +604,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/matches/${matchId}`,
 				method: 'GET',
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Matches
-		 * @name DeleteMatchById
-		 * @summary Deletes the match with the specified ID
-		 * @request DELETE:/matches/{match_id}
-		 */
-		deleteMatchById: (matchId: number, params: RequestParams = {}) =>
-			this.request<void, any>({
-				path: `/matches/${matchId}`,
-				method: 'DELETE',
 				...params
 			}),
 
@@ -660,6 +660,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Players
+		 * @name DeleteTeamById
+		 * @summary Deletes the player with the specified ID
+		 * @request DELETE:/players/{player_id}
+		 */
+		deleteTeamById: (playerId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/players/${playerId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Players
 		 * @name GetTeamById
 		 * @summary Returns the player with the specified ID
 		 * @request GET:/players/{player_id}
@@ -669,21 +684,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/players/${playerId}`,
 				method: 'GET',
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Players
-		 * @name DeleteTeamById
-		 * @summary Deletes the player with the specified ID
-		 * @request DELETE:/players/{player_id}
-		 */
-		deleteTeamById: (playerId: number, params: RequestParams = {}) =>
-			this.request<void, any>({
-				path: `/players/${playerId}`,
-				method: 'DELETE',
 				...params
 			}),
 
@@ -740,6 +740,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Teams
+		 * @name DeleteTeamById
+		 * @summary Deletes the team with the specified ID
+		 * @request DELETE:/teams/{team_id}
+		 */
+		deleteTeamById: (teamId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/teams/${teamId}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Teams
 		 * @name GetTeamById
 		 * @summary Returns the team with the specified ID
 		 * @request GET:/teams/{team_id}
@@ -749,21 +764,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/teams/${teamId}`,
 				method: 'GET',
 				format: 'json',
-				...params
-			}),
-
-		/**
-		 * No description
-		 *
-		 * @tags Teams
-		 * @name DeleteTeamById
-		 * @summary Deletes the team with the specified ID
-		 * @request DELETE:/teams/{team_id}
-		 */
-		deleteTeamById: (teamId: number, params: RequestParams = {}) =>
-			this.request<void, any>({
-				path: `/teams/${teamId}`,
-				method: 'DELETE',
 				...params
 			}),
 
