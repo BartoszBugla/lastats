@@ -21,8 +21,11 @@
 	let n: number = 16;
 
 	const Sn = (x: number[]) => {
+		const mean = x.reduce((a, b) => a + b, 0) / x.length || 0;
+
+		x = x.map((x) => Math.pow(x, 2));
+
 		const sum = x.reduce((a, b) => a + b, 0);
-		const mean = sum / x.length || 0;
 
 		return sum / x.length - Math.pow(mean, 2);
 	};
