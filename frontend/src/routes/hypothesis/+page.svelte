@@ -11,18 +11,23 @@
 		meanX?: number;
 		confFactor?: number;
 		n?: number;
+		h0: number;
 	}
 
-	let x: string = '';
-	let sigma2: number = 16;
-	let alpha: number = 0.01;
-	let meanX: number = 10.2;
-	let confFactor: number = 0.99;
-	let n: number = 16;
+	let x: string = '6.8, 6.9, 7.2, 7.0, 7.8, 7.7, 7.3, 7.2';
+	let sigma2: number;
+	let alpha: number = 0.1;
+	let meanX: number;
+	let confFactor: number;
+	let n: number;
+	let h0: number = 7.1;
 
 	const Sn = (x: number[]) => {
+		const mean = x.reduce((a, b) => a + b, 0) / x.length || 0;
+
+		x = x.map((x) => Math.pow(x, 2));
+
 		const sum = x.reduce((a, b) => a + b, 0);
-		const mean = sum / x.length || 0;
 
 		return sum / x.length - Math.pow(mean, 2);
 	};
@@ -30,50 +35,55 @@
 	const round = (num: number, dec: number) =>
 		Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
 
-	const confRange = ({ x, sigma2, alpha, meanX, confFactor, n }: ConfRange) => {
+	const confRange = ({ x, sigma2, alpha, meanX, confFactor, n, h0 }: ConfRange) => {
 		if (confFactor) alpha = round(1 - confFactor, 2);
 
 		if (!n) {
-			if (!x) throw new Error('Brakujące dane');
+			if (!x) throw new Error('Brakujące dane x');
 			n = x.length;
 		}
 
 		if (!meanX) {
-			if (!x) throw new Error('Brakujące dane');
+			if (!x) throw new Error('Brakujące dane x');
 			const sum = x.reduce((a, b) => a + b, 0);
 			meanX = sum / x.length || 0;
 		}
 
 		if (!sigma2) {
-			if (!alpha || !x) throw new Error('Brakujące dane');
+			if (!alpha || !x) throw new Error('Brakujące dane alpha lub x');
 
 			let sigma = round(Math.sqrt(Sn(x)), 2);
-			let quantile = quantiles[(1 - alpha / 2) as unknown as keyof typeof quantilesBase][n];
 
-			let main = round((quantile * sigma) / Math.sqrt(n - 1), 2);
+			let quantile = quantiles[(1 - alpha / 2) as unknown as keyof typeof quantilesBase][n - 2];
 
-			let division = `${round(meanX - main, 2)} < m < ${round(meanX + main, 2)}`;
+			let testStat = round((Math.sqrt(n - 1) * (meanX - h0)) / sigma, 2);
+
+			let division = `[${-quantile}, ${quantile}]`;
+
 			return {
 				alpha,
 				n,
 				meanX,
 				sigma,
 				quantile,
-				main,
+				testStat,
 				division
 			};
 		} else {
-			if (!alpha) throw new Error('Brakujące dane');
+			if (!alpha) throw new Error('Brakujące dane alpha');
 
 			let sigma = round(Math.sqrt(sigma2), 2);
 
 			let quantile = quantilesBase[(1 - alpha / 2) as unknown as keyof typeof quantilesBase];
 
 			let main = round((quantile * sigma) / Math.sqrt(n), 2);
-			console.log(round(meanX + main, 2));
-			let division = `${round(meanX - main, 2)} < m < ${round(meanX + main, 2)}`;
+
+			let testStat = round((Math.sqrt(n) * (meanX - h0)) / sigma, 2);
+
+			let division = `[${-quantile}, ${quantile}]`;
 
 			return {
+				testStat,
 				alpha,
 				n,
 				meanX,
@@ -96,7 +106,7 @@
 		}
 	};
 
-	$: result = getResult({ n, confFactor, meanX, sigma2, alpha, x: x as any });
+	$: result = getResult({ n, confFactor, meanX, sigma2, alpha, x: x as any, h0 });
 </script>
 
 <div class="max-w-lg mx-auto">
@@ -116,7 +126,12 @@
 		<p>
 			Przedział: {result.division}
 		</p>
+
+		<p>
+			Testowa Statystyka: {result.testStat}
+		</p>
 	{/if}
+
 	<hr class="my-4" />
 	<div>
 		<div class="flex flex-col">
@@ -147,6 +162,11 @@
 			<label>n: </label>
 			<input class="input input-accent" type="number" bind:value={n} />
 		</div>
+
+		<div class="flex flex-col">
+			<label>h0: </label>
+			<input class="input input-accent" type="number" bind:value={h0} />
+		</div>
 	</div>
-	<a class="link" href={routes.hypothesis()}>Liczenie hipotez </a>
+	<a class="link" href={routes.home()}>Liczenie przedziałów </a>
 </div>

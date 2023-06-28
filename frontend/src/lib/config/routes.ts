@@ -6,5 +6,6 @@ export const routes = {
 	addLeague: () => `${base}/leagues/add`,
 	league: (id: number) => `${base}/leagues/${id}`,
 	team: (id: number) => `${base}/teams/${id}`,
-	teams: () => `${base}/teams`
+	teams: () => `${base}/teams`,
+	hypothesis: () => `${base}/hypothesis`
 };
