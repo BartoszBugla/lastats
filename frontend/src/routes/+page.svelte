@@ -99,7 +99,7 @@
 	$: result = getResult({ n, confFactor, meanX, sigma2, alpha, x: x as any });
 </script>
 
-<div class="max-w-lg mx-auto">
+<div class="max-w-lg px-5 mx-auto">
 	{#if result}
 		<p>
 			Sigma: {result.sigma},
